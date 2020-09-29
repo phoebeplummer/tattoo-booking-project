@@ -10,13 +10,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def start():
-    return render_template('/clientHome.html')
+    return render_template('clientHome.html')
 
 #booking request
 @app.route('/bookingRequest', methods = ["GET", "POST"])
 def makeBooking():
     if request.method == 'GET':
-        return render_template('/bookingForm.html')
+        return render_template('bookingForm.html')
     if request.method == 'POST':
         clientForm = []
         aFirstName = request.form['firstName']
@@ -62,4 +62,4 @@ def makeBooking():
             msg = "the following error occured: ()".format(sqlite3.Error)
 
         finally:
-            return render_template("/result.html", msg=msg)
+            return render_template("result.html", msg=msg)
