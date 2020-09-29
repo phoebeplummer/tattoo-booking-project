@@ -1,0 +1,31 @@
+<html>
+<head>
+<h1> WELCOME TO TATTOO BOOKING SERVICE </h1>
+<link rel="stylesheet" href="static/tattoo.css">
+</head>
+<body>
+    <h1>Booking Form</h1>
+    <h4>Please fill out all fields and click submit to request a tattoo booking</h4>
+    <form action ="{{url_for('makeBooking') }}" method = "POST">
+    <p>first name:          <input type="text" name="firstName"></p>
+    <p>last name            <input type="text" name="lastName"></p>
+    <p>email address:       <input type="email" name="email"></p>
+    <p>phone number:        <input type="tel" name="phone"></p>
+    <label for "artists">artist:</label>
+    <select name="artists" id="artists" multiple>
+        <option value=1>Lana Fern</option>
+        <option value=2>Peggy Brown</option>
+        <option value=3>Jodie Ahnien</option>
+        <option value=4>El Rose</option>
+    </select>
+    <p>description:         <input type="text" name="description"></p>
+    <p>approximate width of tattoo  <input type="number" name="sizeWidth"></p>
+    <p>approximate length of tattoo <input type="number" name="sizeLength"></p>
+    <p>desired month to book    <input type="text" name="month"></p>
+    <p> <input type="submit" value="submit"> <br> </p>
+    </form>
+    
+<a href = "/">return to the home page</a>
+
+</body>
+</html>
