@@ -13,7 +13,7 @@ def start():
     return render_template('clientHome.html')
 
 #booking request
-@app.route('/bookingRequest', methods = ["GET", "POST"])
+@app.route('/bookingForm', methods = ["GET", "POST"])
 def makeBooking():
     if request.method == 'GET':
         return render_template('bookingForm.html')
