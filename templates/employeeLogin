@@ -1,0 +1,21 @@
+<html>
+<body>
+<h2> employee login </h2>
+<form action ="{{url_for('employeeLogin') }}" method = "POST">
+<p>username:          <input type="text" name="username"></p>
+<p>password:          <input type="password" name="password></p>
+<input type="checkbox" onclick="showPassword()">Show Password
+
+<script>
+function showPassword() {
+  var x = document.getElementById("myInput");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+</script>
+
+</body>
+</html>
