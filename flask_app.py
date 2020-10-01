@@ -13,7 +13,7 @@ def start():
     return render_template('clientHome.html')
 
 #booking request
-@app.route('/bookingForm', methods = ["GET", "POST"])
+@app.route('/bookingRequest', methods = ["GET", "POST"])
 def makeBooking():
     if request.method == 'GET':
         return render_template('bookingForm.html')
@@ -36,8 +36,7 @@ def makeBooking():
         aLength = request.form["sizeLength"]
         clientForm.append(aLength)
 
-
- #       area = aWidth*aLength
+#       area = aWidth*aLength
  #       sqlfind = " SELECT avgPrice FROM tblArtists where artistNumber = " + "'" + aArtist + "'"
 #        rate = cursor.execute(sqlfind)
  #       estimate = area*rate
