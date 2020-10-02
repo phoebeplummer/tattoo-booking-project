@@ -64,3 +64,27 @@ def makeBooking():
             return render_template("result.html", msg=msg)
         
 @app.route("/employeeLogin", methods = ["GET", "POST"])  
+def employeeLogin():
+    if request.method == 'GET':
+        return render_template('employeeLogin.html')
+    if request.method == 'POST':
+        aUsername = request.form['username']
+        aPassword = request.form['password']
+        sql = "SELECT 'username' FROM 'tblLogin' WHERE 'username' = " = "'" + aUsername +  "'"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        if result == 0:
+            msg = "username not recognised"
+        else:
+            sql = "SELECT password FROM tblLogin WHERE username = " = "'" + aUsername +  "'"
+            cursor.execute(sql)
+            userPassword = cursor.fetchall()
+            if userPassword != aPassword:
+                msg = "username and password do not match, please try again"
+            else:
+                msg = "you are successfully logged in"
+                
+    return render_template("result.html, msg=msg) 
+            
+          
+       
