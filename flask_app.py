@@ -62,3 +62,5 @@ def makeBooking():
 
         finally:
             return render_template("result.html", msg=msg)
+        
+@app.route("/employeeLogin", methods = ["GET", "POST"])  
