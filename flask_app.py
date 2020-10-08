@@ -70,7 +70,7 @@ def employeeLogin():
     if request.method == 'POST':
         aUsername = request.form['username']
         aPassword = request.form['password']
-        sql = "SELECT 'username' FROM 'tblLogin' WHERE 'username' = " = "'" + aUsername +  "'"
+        sql = "SELECT 'username' FROM 'tblLogin' WHERE 'username' = " + "'" + aUsername +  "'"
         cursor.execute(sql)
         result = cursor.fetchall()
         if result == 0:
