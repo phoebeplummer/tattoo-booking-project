@@ -76,7 +76,7 @@ def employeeLogin():
         if result == 0:
             msg = "username not recognised"
         else:
-            sql = "SELECT password FROM tblLogin WHERE username = " = "'" + aUsername +  "'"
+            sql = "SELECT password FROM tblLogin WHERE username = " + "'" + aUsername +  "'"
             cursor.execute(sql)
             userPassword = cursor.fetchall()
             if userPassword != aPassword:
