@@ -84,7 +84,7 @@ def employeeLogin():
             else:
                 msg = "you are successfully logged in"
                 
-    return render_template("result.html, msg=msg) 
+    return render_template("result.html", msg=msg) 
             
           
        
