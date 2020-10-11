@@ -1,6 +1,6 @@
 #set up sql
 import sqlite3
-conn = sqlite3.connect("tattoo database 1.db")
+conn = sqlite3.connect("tattoo database 2.db")
 cursor = conn.cursor()
 
 #load flask framework
