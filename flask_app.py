@@ -1,5 +1,9 @@
 #set up sql
 import sqlite3
+import os.path
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, "tattoo database 2.db")
 conn = sqlite3.connect("tattoo database 2.db")
 cursor = conn.cursor()
 
