@@ -1,7 +1,7 @@
 #set up sql
 import sqlite3
 conn = sqlite3.connect("tattoo database 1.db")
-cursor = conn.cursor
+cursor = c.cursor
 
 #load flask framework
 from flask import Flask, render_template, request
