@@ -1,13 +1,5 @@
-#set up sql
 import sqlite3
-import os
-THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-my_file = os.path.join(THIS_FOLDER, 'myfile.txt')
-conn = sqlite3.connect("tattoo database 2.db")
-cursor = conn.cursor()
-
-#load flask framework
-from flask import Flask, render_template, request
+from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
@@ -15,79 +7,133 @@ app = Flask(__name__)
 def start():
     return render_template('clientHome.html')
 
+@app.route('/db')
+def view():
+    with sqlite3.connect('queen-bitch-db.db') as db:
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM tblLogin")
+        result = cursor.fetchall()
+        return ','.join(map(str, result))
+
 #booking request
-@app.route('/bookingRequest', methods = ["GET", "POST"])
+@app.route('/booking-request', methods = ["GET", "POST"])
 def makeBooking():
+    conn = sqlite3.connect('queen-bitch-db.db')
+    cursor = conn.cursor()
     if request.method == 'GET':
-        return render_template('bookingForm.html')
+       return render_template('bookingForm.html')
     if request.method == 'POST':
-        clientForm = []
+#add client details to tblClients
+        clientDetails = []
         aFirstName = request.form['firstName']
-        clientForm.append(aFirstName)
-        aLastName = request.form['aLastName']
-        clientForm.append(aLastName)
+        clientDetails.append(aFirstName)
+        aSurname = request.form['surname']
+        clientDetails.append(aSurname)
         aEmail = request.form["email"]
-        clientForm.append(aEmail)
+        clientDetails.append(aEmail)
         aPhone = request.form["phone"]
-        clientForm.append(aPhone)
+        clientDetails.append(aPhone)
+        sqltblClients = "INSERT INTO tblClients (firstName, surname, email, phone) VALUES (?, ?, ?, ?)"
+        cursor.execute(sqltblClients, clientDetails)
+        conn.commit()
+
+#add booking details to tblBookings
+        bookingDetails = []
+#first create unique bookingID
         aArtist = request.form["artists"]
-        clientForm.append(aArtist)
-        aDescription = request.form["description"]
-        clientForm.append(aDescription)
-        aWidth = request.form["sizeWidth"]
-        clientForm.append(aWidth)
-        aLength = request.form["sizeLength"]
-        clientForm.append(aLength)
+        sqlClientNo = "SELECT clientNumber FROM tblClients WHERE email =" + "'" + aEmail + "'"
+        cursor.execute(sqlClientNo)
+        clientNo = (cursor.fetchone()[0])
+        clientNo = clientNo + 1
+        clientNo = str(clientNo)
+        artistNo = str(aArtist)
+        letter1 = aFirstName[0]
+        letter2 = aSurname[0]
+        bookingId = letter1 + letter2 + clientNo + artistNo
+        bookingDetails.append(bookingId)
+#can then add rest of info from form
+        clientNo = int(clientNo)
+        bookingDetails.append(clientNo)
+        artistNo = int(artistNo)
+        bookingDetails.append(artistNo)
+        aDescription = request.form['description']
+        bookingDetails.append(aDescription)
+        aPlacement = request.form['placement']
+        bookingDetails.append(aPlacement)
+        aWidth = request.form['sizeWidth']
+        bookingDetails.append(aWidth)
+        aLength = request.form['sizeLength']
+        bookingDetails.append(aLength)
+#work out estimate to add to tblBookings
+        sqlAvgPrice = "SELECT avgPrice FROM tblArtists WHERE artistNumber =" + "'" + str(artistNo) + "'"
+        cursor.execute(sqlAvgPrice)
+        avgPrice = (cursor.fetchone()[0])
+        estimate = int(aWidth) * int(aLength) * avgPrice
+        bookingDetails.append(estimate)
+#work out deposit to add to tblBookings
+        if estimate<100:
+            deposit = 20
+        elif estimate>=100 and estimate<200:
+            deposit = 50
+        elif estimate>=200 and estimate<400:
+            deposit = 100
+        else:
+            deposit = 150
+        bookingDetails.append(deposit)
+#work out sessionLength to add to tblBookings
+        if (int(aWidth)*int(aLength))<300:
+            sessionLength = "half day"
+        else:
+            sessionLength = "full day"
+        bookingDetails.append(sessionLength)
+        aMonth = request.form['months']
+        bookingDetails.append(aMonth)
+#add "N" to indicate estimate has not been received and booking has not been confirmed
+        bookingDetails.append("N")
+        bookingDetails.append("N")
+        sqltblBookings = "INSERT INTO tblBookings (bookingID, clientNumber, artistNumber, description, placement, sizeWidth, sizeLength, estimate, deposit, sessionLength, desiredMonth, receivedEstimate, confirmedBooking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(sqltblBookings, bookingDetails)
+        conn.commit()
+        return "booking successfully requested"
 
-#       area = aWidth*aLength
- #       sqlfind = " SELECT avgPrice FROM tblArtists where artistNumber = " + "'" + aArtist + "'"
-#        rate = cursor.execute(sqlfind)
- #       estimate = area*rate
-  #      clientForm.append(estimate)
-
-
-        aMonth = request.form["month"]
-        clientForm.append(aMonth)
-
-#sql statement
-        sql = """
-        INSERT INTO tblClients (firstName, lastName, email, phoneNumber, artistNumber, description, sizeWidth, sizeLength, month)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """
-
-        try:
-            cursor.execute(sql, clientForm)
-            conn.commit()
-            msg = "booking successfully requested"
-
-        except sqlite3.Error:
-            conn.rollback()
-            msg = "the following error occured: ()".format(sqlite3.Error)
-
-        finally:
-            return render_template("result.html", msg=msg)
-        
-@app.route("/employeeLogin", methods = ["GET", "POST"])  
+@app.route('/employee-login', methods =["GET", "POST"])
 def employeeLogin():
-    if request.method == 'GET':
-        return render_template('employeeLogin.html')
-    if request.method == 'POST':
+    conn = sqlite3.connect('queen-bitch-db.db')
+    cursor = conn.cursor()
+    if request.method == "GET":
+        return render_template("employeeLogin.html")
+    if request.method == "POST":
         aUsername = request.form['username']
         aPassword = request.form['password']
-        sql = "SELECT 'username' FROM 'tblLogin' WHERE 'username' = " + "'" + aUsername +  "'"
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        if result == 0:
-            msg = "username not recognised"
+        cursor.execute("SELECT password FROM tblLogin WHERE username =" + "'" + aUsername + "'")
+        correctPassword = cursor.fetchone()
+        if correctPassword == None:
+            return "username not found in system"
+        elif aPassword != correctPassword[0]:
+            return 'username and password do not match'
         else:
-            sql = "SELECT password FROM tblLogin WHERE username = " + "'" + aUsername +  "'"
-            cursor.execute(sql)
-            userPassword = cursor.fetchall()
-            if userPassword != aPassword:
-                msg = "username and password do not match, please try again"
-            else:
-                msg = "you are successfully logged in"
-                
-    return render_template("result.html", msg=msg) 
-            
-          
-       
+            return render_template("/employeeHome.html")
+
+@app.route('/new-employee', methods=["GET", "POST"])
+def addEmployee():
+    conn = sqlite3.connect('queen-bitch-db.db')
+    cursor = conn.cursor()
+    if request.method == "GET":
+        return render_template("addEmployee.html")
+    if request.method == "POST":
+        aUsername = request.form["username"]
+        aPassword1 = request.form["password1"]
+        aPassword2 = request.form["password2"]
+        if aPassword1 != aPassword2:
+            return "passwords do not match"
+        cursor.execute("SELECT * FROM tblLogin WHERE username =" + "'" + aUsername + "'")
+        rows = cursor.fetchall()
+        if len(rows) > 0:
+            return "username already in system"
+        newLogin = []
+        newLogin.append(aUsername)
+        newLogin.append(aPassword1)
+        sqlAddLogin = "INSERT INTO tblLogin (username, password) VALUES (?, ?)"
+        cursor.execute(sqlAddLogin, newLogin)
+        conn.commit()
+        return "new login added"
