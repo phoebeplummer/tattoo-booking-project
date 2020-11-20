@@ -8,9 +8,9 @@
     <h4>Please fill out all fields and click submit to request a tattoo booking</h4>
     <form action ="{{url_for('makeBooking') }}" method = "POST">
     <p>first name:          <input type="text" name="firstName"></p>
-    <p>last name            <input type="text" name="lastName"></p>
-    <p>email address:       <input type="email" name="email"></p>
-    <p>phone number:        <input type="tel" name="phone"></p>
+    <p>surname:             <input type="text" name="surname"></p>
+    <p>email address:       <input type="text" name="email"></p>
+    <p>phone number:        <input type="text" name="phone"></p>
     <label for "artists">artist:</label>
     <select name="artists" id="artists" multiple>
         <option value=1>Lana Fern</option>
@@ -19,6 +19,7 @@
         <option value=4>El Rose</option>
     </select>
     <p>description:         <input type="text" name="description"></p>
+    <p>placement:           <input type="text" name="placement"></p>
     <p>approximate width of tattoo  <input type="number" name="sizeWidth"></p>
     <p>approximate length of tattoo <input type="number" name="sizeLength"></p>
     <label for "months">desired month to book:</label>
@@ -38,7 +39,7 @@
     </select>
     <p> <input type="submit"> <br> </p>
     </form>
-    
+
 
 </body>
 </html>
