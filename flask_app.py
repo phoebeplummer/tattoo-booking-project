@@ -137,3 +137,35 @@ def addEmployee():
         cursor.execute(sqlAddLogin, newLogin)
         conn.commit()
         return "new login added"
+
+#add confirmed booking
+@app.route('/add-booking', methods =["GET", "POST"])
+def addBooking():
+#connect to database
+    conn = sqlite3.connect('queen-bitch-db.db')
+    cursor = conn.cursor()
+    if request.method == "GET":
+        return render_template('addBooking.html')
+    if request.method == "POST":
+        aFirstName = request.form["firstName"]
+        aSurname = request.form["surname"]
+ #fetch client number and check client is in database
+        sqlCheck = "SELECT clientNumber FROM tblClients WHERE firstName =" + "'" + aFirstName + "'" + "AND surname =" + "'" + aSurname + "'"
+        cursor.execute(sqlCheck)
+        clientNo = cursor.fetchone()
+        if clientNo == None:
+            return "client not found in system"
+#update database with confirmed booking details
+        booking = []
+        booking.append("Y")
+        aDay = request.form["day"]
+        booking.append(aDay)
+        aMonth = request.form["month"]
+        booking.append(aMonth)
+        aTime = request.form["sessionTime"]
+        booking.append(aTime)
+        clientNo = clientNo[0] + 1
+        sqlConfirmed = "UPDATE tblBookings SET confirmedBooking = ? ,bookedDay = ?,bookedMonth = ? ,bookedTime = ? WHERE clientNumber =" + "'" + str(clientNo) + "'"
+        cursor.execute(sqlConfirmed, booking)
+        conn.commit()
+        return "booking confirmed"
