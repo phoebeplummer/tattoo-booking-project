@@ -11,13 +11,14 @@ def start():
 def view():
     with sqlite3.connect('queen-bitch-db.db') as db:
         cursor = db.cursor()
-        cursor.execute("SELECT * FROM tblLogin")
+        cursor.execute("SELECT * FROM tblClients")
         result = cursor.fetchall()
         return ','.join(map(str, result))
 
 #booking request
 @app.route('/booking-request', methods = ["GET", "POST"])
-def makeBooking():
+def requestBooking():
+#connect to database
     conn = sqlite3.connect('queen-bitch-db.db')
     cursor = conn.cursor()
     if request.method == 'GET':
@@ -47,9 +48,7 @@ def makeBooking():
         clientNo = clientNo + 1
         clientNo = str(clientNo)
         artistNo = str(aArtist)
-        letter1 = aFirstName[0]
-        letter2 = aSurname[0]
-        bookingId = letter1 + letter2 + clientNo + artistNo
+        bookingId = aFirstName[0] + aSurname[0] + clientNo + artistNo
         bookingDetails.append(bookingId)
 #can then add rest of info from form
         clientNo = int(clientNo)
@@ -91,13 +90,16 @@ def makeBooking():
 #add "N" to indicate estimate has not been received and booking has not been confirmed
         bookingDetails.append("N")
         bookingDetails.append("N")
+#add details to tblBookings
         sqltblBookings = "INSERT INTO tblBookings (bookingID, clientNumber, artistNumber, description, placement, sizeWidth, sizeLength, estimate, deposit, sessionLength, desiredMonth, receivedEstimate, confirmedBooking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(sqltblBookings, bookingDetails)
         conn.commit()
         return "booking successfully requested"
 
+#login to employee site
 @app.route('/employee-login', methods =["GET", "POST"])
 def employeeLogin():
+#connect to database
     conn = sqlite3.connect('queen-bitch-db.db')
     cursor = conn.cursor()
     if request.method == "GET":
@@ -105,17 +107,22 @@ def employeeLogin():
     if request.method == "POST":
         aUsername = request.form['username']
         aPassword = request.form['password']
+#fetch correct password from database
         cursor.execute("SELECT password FROM tblLogin WHERE username =" + "'" + aUsername + "'")
         correctPassword = cursor.fetchone()
+#check username is in system
         if correctPassword == None:
             return "username not found in system"
+#check username and password match
         elif aPassword != correctPassword[0]:
             return 'username and password do not match'
         else:
             return render_template("/employeeHome.html")
 
+#add new employee login
 @app.route('/new-employee', methods=["GET", "POST"])
 def addEmployee():
+#connect to database
     conn = sqlite3.connect('queen-bitch-db.db')
     cursor = conn.cursor()
     if request.method == "GET":
@@ -124,12 +131,15 @@ def addEmployee():
         aUsername = request.form["username"]
         aPassword1 = request.form["password1"]
         aPassword2 = request.form["password2"]
+#verify passwords match
         if aPassword1 != aPassword2:
             return "passwords do not match"
+#check username is not already in system
         cursor.execute("SELECT * FROM tblLogin WHERE username =" + "'" + aUsername + "'")
         rows = cursor.fetchall()
         if len(rows) > 0:
             return "username already in system"
+#add new login to database tblLogin
         newLogin = []
         newLogin.append(aUsername)
         newLogin.append(aPassword1)
@@ -149,10 +159,11 @@ def addBooking():
     if request.method == "POST":
         aFirstName = request.form["firstName"]
         aSurname = request.form["surname"]
- #fetch client number and check client is in database
-        sqlCheck = "SELECT clientNumber FROM tblClients WHERE firstName =" + "'" + aFirstName + "'" + "AND surname =" + "'" + aSurname + "'"
-        cursor.execute(sqlCheck)
+ #fetch client number from database
+        sqlClientNo = "SELECT clientNumber FROM tblClients WHERE firstName =" + "'" + aFirstName + "'" + "AND surname =" + "'" + aSurname + "'"
+        cursor.execute(sqlClientNo)
         clientNo = cursor.fetchone()
+#check client is in database
         if clientNo == None:
             return "client not found in system"
 #update database with confirmed booking details
@@ -169,3 +180,39 @@ def addBooking():
         cursor.execute(sqlConfirmed, booking)
         conn.commit()
         return "booking confirmed"
+
+#edit booking details
+@app.route('/edit-booking', methods = ["GET", "POST"])
+def editBooking():
+#connect to database
+    conn = sqlite3.connect('queen-bitch-db.db')
+    cursor = conn.cursor()
+    if request.method == "GET":
+        return render_template('editBooking.html')
+    if request.method == "POST":
+        aFirstName = request.form["firstName"]
+        aSurname = request.form["surname"]
+ #fetch client number from database
+        sqlClientNo = "SELECT clientNumber FROM tblClients WHERE firstName =" + "'" + aFirstName + "'" + "AND surname =" + "'" + aSurname + "'"
+        cursor.execute(sqlClientNo)
+        clientNo = cursor.fetchone()
+#check client is in database
+        if clientNo == None:
+            return "client not found in system"
+        clientNo = clientNo[0]
+        aField = request.form["field"]
+        aNew = request.form["new"]
+#arrays to determine whether field to be editted is in tblBookings or tblClients
+        clientDetails = ["phone", "email"]
+        bookingDetails = ["description", "placement", "sizeWidth", "sizeLength"]
+#update field in tblClients
+        if aField in clientDetails:
+            sqlUpdate = "UPDATE tblClients SET " + aField + "=" + "'" + aNew + "'" + " WHERE clientNumber =" + "'" + str(clientNo) + "'"
+            cursor.execute(sqlUpdate)
+            conn.commit()
+            return "updated"
+        elif aField in bookingDetails:
+            sqlUpdate = "UPDATE tblBookings SET " + aField + "=" + "'" + aNew + "'" + " WHERE clientNumber =" + "'" + str(clientNo) + "'"
+            cursor.execute(sqlUpdate)
+            conn.commit()
+            return "updated"
