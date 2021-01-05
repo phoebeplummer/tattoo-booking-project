@@ -1,0 +1,249 @@
+<html>
+<head>
+<link rel="stylesheet" href="static/tattoo.css">
+<style>
+#clientNoCheck {
+    display: none;
+}
+* {
+  box-sizing: border-box;
+}
+
+/*format entry fields so they are next to label*/
+label {
+    padding: 15px 15px 15px 0;
+    display: inline-block;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+input:focus {
+    border: 3px solid #221A2A;
+}
+
+.col15 {
+    float: left;
+    width: 15%;
+    margin-top: 6px;
+    padding-left: 15px;
+}
+
+.col85 {
+    float: left;
+    width: 85%;
+    margin-top: 6px;
+}
+
+/*clear floats after the columns*/
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/*make entry fields go underneth label when screen is smaller*/
+@media screen and (max-width: 900px) {
+    .col15, .col85, input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+
+#description {
+    height: 100px;
+}
+
+input[type=submit] {
+    background-color: #655473;
+    font-size: 16px;
+    width: 100px;
+    height: 50px;
+    border-radius: 30%;
+    border: 3px solid #221A2A;
+    color: #FFFFFF;
+    position: absolute;
+    left: 50%;
+    margin-left: -50px
+}
+
+input[type=submit]:hover {
+  box-shadow: 0 15px 20px 0 rgba(0,0,0,0.24), 0 20px 50px 0 rgba(0,0,0,0.24);
+  cursor: pointer;
+}
+
+p {
+    padding: 10px;
+    text-align: justify;
+}
+</style>
+</head>
+<body>
+<!header>
+<div class = "header">
+    <a href = "/">
+        <img src="https://i.ibb.co/FwGkTmY/queen-bitch-logo.png" alt="logo" />
+    </a>
+    <h1>Queen Bitch Tattoo Studio</h1>
+</div>
+<div class ="content">
+    <h1>Booking Form</h1>
+    <h4>Please fill out all fields and click submit to request a tattoo booking</h4>
+    <form action ="{{url_for('requestBookingReturning') }}" method = "POST">
+<!field: first name>
+    <div class="row">
+        <div class = "col15">
+            <label for "firstName">First name: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id="firstName" name="firstName" placeholder="Your first name...">
+        </div>
+    </div>
+<!field: surname>
+    <div class="row">
+        <div class = "col15">
+            <label for "surname">Surname: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id= "surname" name="surname" placeholder="Your surname here..." onblur="verifyClient(); displayCheck();">
+        </div>
+    </div>
+<!verify client number>
+    <div id ="clientNoCheck">
+        <p>When you first booked with us we will have given you a unique client number to identify you.
+        If you did not make a note of this, it will have also been sent to you via email when you booked your last tattoo.</p>
+        <p id="verifyClient"></p>
+        <input type="radio" id="clientYes" name="clientVerify" value="yes" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm client number before booking can be requested' : '');" >
+        <label for="clientYes">Yes</label>
+        <input type="radio" id="clientNo" name="clientVerify" value="no" onclick="verifyNo()">
+        <label for="clientNo">No</label>
+        <p>If you cannot find your client ID or the ID above does not match your please register as a new client</p>
+    </div>
+    <!field: artist>
+    <div class="row">
+        <div class = "col15">
+            <label for "artists">Artist: </label>
+        </div>
+        <div class = "col85">
+            <select name="artists" id="artists">
+                <option value=1>Lana Fern</option>
+                <option value=2>Peggy Brown</option>
+                <option value=3>Jodie Ahnien</option>
+                <option value=4>El Rose</option>
+            </select>
+        </div>
+    </div>
+<!field: description>
+    <div class="row">
+        <div class = "col15">
+            <label for "description">Description: </label>
+        </div>
+        <div class = "col85" id="description">
+            <input type="text" id="description" name="description" placeholder="Your tattoo description here...">
+        </div>
+    </div>
+<!field: placement>
+    <div class="row">
+        <div class = "col15">
+            <label for "placement">Placement: </label>
+        </div>
+        <div class = "col85">
+            <input type="text" id="placement" name="placement" placeholder="Your tattoo placement here...">
+        </div>
+    </div>
+<!field: width>
+    <div class="row">
+        <div class = "col15">
+            <label for "sizeWidth">Width of tattoo (cm): </label>
+        </div>
+        <div class = "col85">
+            <input type="number" step =0.5 min= 0 id="sizeWidth" name="sizeWidth" placeholder="Your approximate tattoo width here...">
+        </div>
+    </div>
+<!field: length>
+    <div class="row">
+        <div class = "col15">
+            <label for "sizeLength">Length of tattoo (cm): </label>
+        </div>
+        <div class = "col85">
+            <input type="number" step =0.5 min= 0 id="sizeLength" name="sizeLength" placeholder="Your approximate tattoo length here...">
+        </div>
+    </div>
+<!field: month>
+    <div class="row">
+        <div class = "col15">
+            <label for "months">Desired month to book:</label>
+        </div>
+        <div class = "col85">
+            <select name="months" id="months">
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
+            </select>
+        </div>
+    </div>
+    <br>
+    <br>
+    <input type="Submit" value="Submit">
+    </form>
+</div>
+    <br>
+    <br>
+    <p>After you have submitted the form you will receive an email from us with proposal dates for you to book in as well as an estimate and the required deposit.
+    Please reply to this email with the date you would like to book in.
+    Please note that we cannot confirm your booking until we have received the deposit as our artists are busy women.
+    If you have any queries or would like to change any details about your booking please email us.
+    It is always ok to make final changes on the day of your booking. It is of the utmost importance to us that you get your perfect tattoo! </p>
+<!footer>
+<div class = "footer">
+  <div id ="footLeft"><p>Tel: 07525761214</p></div>
+  <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
+  <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
+</div>
+<script>
+function verifyClient() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("verifyClient").innerHTML = this.responseText;
+        }
+    };
+    var firstName = document.getElementById("firstName").value
+    var surname = document.getElementById("surname").value
+    xhttp.open("GET", "/verifyClient?f="+firstName+"&s="+surname, true);
+    xhttp.send();
+}
+</script>
+<script>
+function verifyNo() {
+    location.replace("http://phoebeplummer1.pythonanywhere.com/booking-request")
+}
+</script>
+<script>
+document.getElementById("clientYes").setCustomValidity('Must confirm client number before booking can be requested');
+</script>
+<script>
+function displayCheck() {
+  var x = document.getElementById("clientNoCheck");
+  if (x.style.display === "none") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+</script>
+</body>
