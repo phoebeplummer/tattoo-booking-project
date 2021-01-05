@@ -1,32 +1,122 @@
 <html>
 <head>
-<h1>WELCOME TO TATTOO BOOKING SERVICE</h1>
-
 <link rel="stylesheet" href="static/tattoo.css">
+<style>
+/*format image and overlay*/
+img {
+  display: block;
+  height: auto;
+  width: 100%;
+  padding: 15px;
+}
 
+.overlay {
+  position: absolute;
+  left: 15px;
+  bottom: 15px;
+  right: 15px;
+  top: 15px;
+  background: rgba(101, 84, 115, 0.5);
+  color: #FFFFFF;
+  width: 100%;
+  transition: .5s ease;
+  opacity:0;
+}
+
+.overlay h3 {
+  color: #FFFFFF;
+  font-size: 40px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.container:hover .overlay {
+  opacity: 1;
+}
+
+/*change number of photos in row depending on width of screen*/
+.container {
+  position: relative;
+  width: 23%;
+  float: left;
+  padding: 10px;
+}
+
+@media screen and (max-width: 1200px) {
+    .container {
+        width: 47%;
+        float: left;
+        padding: 10px;
+    }
+}
+
+@media screen and (max-width: 690px) {
+    .container {
+        width: 98%;
+    }
+}
+</style>
 </head>
 
 <body>
-    <a href="https://www.instagram.com/lanaferntattoo/?hl=en">
-        <img src="lana fern.JPG" alt="Lana Fern">
+<!header>
+<div class = "header">
+    <a href = "/">
+        <img src="https://i.ibb.co/FwGkTmY/queen-bitch-logo.png" alt="logo" />
     </a>
+    <h1>Queen Bitch Tattoo Studio</h1>
+</div>
+<!photos of artist's work>
+<div class="content">
+    <div class="container">
+        <a href="https://www.instagram.com/lanaferntattoo/?hl=en">
+            <img src="https://i.ibb.co/rk44TvL/lana-fern.jpg" alt="Lana Fern">
+        </a>
+        <div class="overlay"><h3>Lana Fern</h3></div>
+    </div>
 
-    <a href="https://www.instagram.com/misspeggybrown/?hl=en">
-        <img src="peggy brown.JPG" alt="Peggy Brown">
-    </a>
+    <div class="container">
+        <a href="https://www.instagram.com/misspeggybrown/?hl=en">
+            <img src="https://i.ibb.co/Phy7ZpK/peggy-brown.jpg" alt="Peggy Brown">
+        </a>
+        <div class="overlay"><h3>Peggy Brown</h3></div>
+    </div>
 
-    <a href="https://www.instagram.com/JodieAhnienTattoo/">
-        <img src="jodie ahnien.JPG"  alt="Jodie Ahnien">
-    </a>
+    <div class="container">
+        <a href="https://www.instagram.com/JodieAhnienTattoo/">
+            <img src="https://i.ibb.co/rZpZrky/jodie-ahnien.jpg"  alt="Jodie Ahnien">
+        </a>
+        <div class="overlay"><h3>Jodie Ahnien</h3></div>
+    </div>
 
-    <a href="https://www.instagram.com/elrosetattoo/?hl=en">
-        <img src="el rose.JPG" alt="El Rose">
-    </a>
+    <div class="container">
+        <a href="https://www.instagram.com/elrosetattoo/?hl=en">
+            <img src="https://i.ibb.co/TTzfxCC/el-rose.jpg" alt="El Rose">
+        </a>
+        <div class="overlay"><h3>El Rose</h3></div>
+    </div>
 
-    <li> <a href = "/booking-request"> Request a booking </a> </li>
-
-    <li> <a href = "/employee-login">Employee Login </a> </li>
-
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+<!link to request booking>
+    <button> <a href = "/booking-request"> Request a booking </a> </button>
+<!link to employee login>
+    <button> <a href = "/employee-login">Employee Login </a> </button>
+</div>
+<!footer>
+<div class = "footer">
+    <div class = "footer">
+    <div id ="footLeft"><p>Tel: 07525761214</p></div>
+    <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
+    <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
+</div>
+</div>
 </body>
 
 </html>
