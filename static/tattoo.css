@@ -1,0 +1,88 @@
+/*format background*/
+body {
+    background-color: #EBE8ED;
+    background-attachment: scroll;
+}
+
+/*make text same font/size*/
+* not(.header):not(.footer){
+    font-family: "bodoni", "georgia", serif;
+    font-size: 15px;
+}
+
+/*push content up and down so header/footer does not cover it*/
+.content {
+    padding-top: 160px;
+    padding-bottom: 60px;
+}
+/*push content down/up further when screen size is reduced so header/footer does not cover it*/
+@media screen and (max-width: 998px) {
+    .content {
+        padding-top: 220px;
+    }
+}
+
+@media screen and (max-width: 592px) {
+    .content {
+        padding-top: 260px;
+        padding-bottom: 70px;
+    }
+}
+
+/*format header*/
+.header {
+    background-color: #221A2A;
+    color: #FFFFFF;
+    font-size: 30px;
+    font-family: "Copperplate", "perpetua", fantasy;
+    padding: 10px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    vertical-align: middle;
+}
+.header img{
+    float: left;
+    width: 130px;
+    height: auto;
+    padding: 12px;
+}
+.header h1{
+    position: relative;
+    left: 10px;
+}
+
+/*format footer*/
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 3px;
+    background-color: #221A2A;
+    color: #FFFFFF;
+    font-size: 10px;
+    font-family: "Copperplate", "perpetua", fantasy;
+    z-index: 1;
+    vertical-align: middle;
+}
+
+#footLeft {
+    width: 33.3%;
+    float: left;
+    text-align: left;
+}
+
+#footCentre {
+    width: 33.3%;
+    float: left;
+    text-align: center;
+}
+
+#footRight {
+    width: 32.8%;
+    float: left;
+    text-align: right;
+}
