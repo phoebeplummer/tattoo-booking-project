@@ -1,14 +1,36 @@
 <html>
 <head>
-<h1>Queen Bitch Tattoo Studio</h1>
-<h2>Employee site</h2>
 <link rel="stylesheet" href="static/tattoo.css">
+<style>
+#infoCheck {
+    display: none;
+}
+* {
+  box-sizing: border-box;
+}
+
+</style>
 </head>
 <body>
+<!header>
+<div class = "header">
+    <a href = "/">
+        <img src="https://i.ibb.co/FwGkTmY/queen-bitch-logo.png" alt="logo" />
+    </a>
+    <h1>Queen Bitch Tattoo Studio</h1>
+</div>
+<div class="content">
+<h2>Employee site</h2>
 <h3>add confirmed booking</h3>
 <form action ="{{url_for('addBooking') }}" method = "POST">
-    <p>client first name:       <input type="text" name="firstName"></p>
-    <p>client surname           <input type="text" name="surname"></p>
+    <p>client first name:       <input type="text" name="firstName" id="firstName"></p>
+    <p>client surname:          <input type="text" name="surname" id="surname"></p>
+    <button type="button" onclick="findClient(); displayCheck();">Find client</button>
+
+<p id="clientConfirm"></p>
+
+    <div id="infoCheck">
+    Is this correct?        <input  id="infoConfirm" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm client info is correct before booking details can be editted' : '');" type="checkbox" required name="infoConfirm"></div>
     <label for "day">Confirmed day:</label>
     <select name="day" id="day" multiple>
         <option value=1>1</option>
@@ -67,12 +89,49 @@
 
     <p>Received deposit?        <input  id="deposit" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm deposit has been received before booking can be confirmed' : '');" type="checkbox" required name="deposit"></p>
     <p> <input type="submit"> </p>
-    </form>
+</form>
+
+<!footer>
+<div class = "footer">
+  <div id ="footLeft"><p>Tel: 07525761214</p></div>
+  <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
+  <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
+</div>
+
+</div>
 
 <script>
-
   document.getElementById("deposit").setCustomValidity("Must confirm deposit has been received before booking can be confirmed");
+</script>
 
+<script>
+function findClient() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("clientConfirm").innerHTML = this.responseText;
+        }
+    };
+    var firstName = document.getElementById("firstName").value
+    var surname = document.getElementById("surname").value
+    xhttp.open("GET", "/findClient?f="+firstName+"&s="+surname, true);
+    xhttp.send();
+}
+</script>
+
+<script>
+function displayCheck() {
+  var x = document.getElementById("infoCheck");
+  if (x.style.display === "none") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+</script>
+
+<script>
+  document.getElementById("infoConfirm").setCustomValidity("Must confirm client info is correct before booking details can be editted");
 </script>
 
 </body>
