@@ -55,6 +55,7 @@ input:focus {
     }
 }
 
+/*make entry field for description larger than other entry fields*/
 #description {
     height: 100px;
 }
@@ -77,10 +78,12 @@ input[type=submit]:hover {
   cursor: pointer;
 }
 
-p {
+#bookInfo {
     padding: 10px;
     text-align: justify;
 }
+
+
 </style>
 </head>
 <body>
@@ -101,7 +104,7 @@ p {
             <label for "firstName">First name: </label>
         </div>
         <div class='col85'>
-            <input type="text" id="firstName" name="firstName" placeholder="Your first name...">
+            <input type="text" id="firstName" name="firstName" placeholder="Your first name..." required>
         </div>
     </div>
 <!field: surname>
@@ -110,27 +113,35 @@ p {
             <label for "surname">Surname: </label>
         </div>
         <div class='col85'>
-            <input type="text" id= "surname" name="surname" placeholder="Your surname here..." onblur="verifyClient(); displayCheck();">
+            <input type="text" id= "surname" name="surname" placeholder="Your surname here..." onblur="verifyClient(); displayCheck();" required>
         </div>
     </div>
+
+
 <!verify client number>
     <div id ="clientNoCheck">
         <p>When you first booked with us we will have given you a unique client number to identify you.
         If you did not make a note of this, it will have also been sent to you via email when you booked your last tattoo.</p>
         <p id="verifyClient"></p>
-        <input type="radio" id="clientYes" name="clientVerify" value="yes" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm client number before booking can be requested' : '');" >
-        <label for="clientYes">Yes</label>
-        <input type="radio" id="clientNo" name="clientVerify" value="no" onclick="verifyNo()">
-        <label for="clientNo">No</label>
-        <p>If you cannot find your client ID or the ID above does not match your please register as a new client</p>
+        <label class="radioContainer">Yes
+            <input type="radio" id="clientYes" name="clientVerify" value="yes" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm client number before booking can be requested' : '');" >
+            <span class="radioCheckmark"></span>
+        </label>
+        <label class="radioContainer">No
+            <input type="radio" id="clientNo" name="clientVerify" value="no" onclick="verifyNo()">
+            <span class="radioCheckmark"></span>
+        </label>
+        <p>If you cannot find your client ID or the ID above does not match yours please register as a new client</p>
     </div>
+
+
     <!field: artist>
     <div class="row">
         <div class = "col15">
             <label for "artists">Artist: </label>
         </div>
         <div class = "col85">
-            <select name="artists" id="artists">
+            <select name="artists" id="artists" required>
                 <option value=1>Lana Fern</option>
                 <option value=2>Peggy Brown</option>
                 <option value=3>Jodie Ahnien</option>
@@ -144,7 +155,7 @@ p {
             <label for "description">Description: </label>
         </div>
         <div class = "col85" id="description">
-            <input type="text" id="description" name="description" placeholder="Your tattoo description here...">
+            <input type="text" id="description" name="description" placeholder="Your tattoo description here..." required>
         </div>
     </div>
 <!field: placement>
@@ -153,7 +164,7 @@ p {
             <label for "placement">Placement: </label>
         </div>
         <div class = "col85">
-            <input type="text" id="placement" name="placement" placeholder="Your tattoo placement here...">
+            <input type="text" id="placement" name="placement" placeholder="Your tattoo placement here..." required>
         </div>
     </div>
 <!field: width>
@@ -162,7 +173,7 @@ p {
             <label for "sizeWidth">Width of tattoo (cm): </label>
         </div>
         <div class = "col85">
-            <input type="number" step =0.5 min= 0 id="sizeWidth" name="sizeWidth" placeholder="Your approximate tattoo width here...">
+            <input type="number" step =0.5 min= 0 id="sizeWidth" name="sizeWidth" placeholder="Your approximate tattoo width here..." required>
         </div>
     </div>
 <!field: length>
@@ -171,7 +182,7 @@ p {
             <label for "sizeLength">Length of tattoo (cm): </label>
         </div>
         <div class = "col85">
-            <input type="number" step =0.5 min= 0 id="sizeLength" name="sizeLength" placeholder="Your approximate tattoo length here...">
+            <input type="number" step =0.5 min= 0 id="sizeLength" name="sizeLength" placeholder="Your approximate tattoo length here..." required>
         </div>
     </div>
 <!field: month>
@@ -180,7 +191,7 @@ p {
             <label for "months">Desired month to book:</label>
         </div>
         <div class = "col85">
-            <select name="months" id="months">
+            <select name="months" id="months" required>
                 <option value="january">January</option>
                 <option value="february">February</option>
                 <option value="march">March</option>
@@ -200,15 +211,15 @@ p {
     <br>
     <input type="Submit" value="Submit">
     </form>
-</div>
     <br>
     <br>
-    <p>After you have submitted the form you will receive an email from us with proposal dates for you to book in as well as an estimate and the required deposit.
+    <p id="bookInfo">After you have submitted the form you will receive an email from us with proposal dates for you to book in as well as an estimate and the required deposit.
     Please reply to this email with the date you would like to book in.
     Please note that we cannot confirm your booking until we have received the deposit as our artists are busy women.
     If you have any queries or would like to change any details about your booking please email us.
     It is always ok to make final changes on the day of your booking. It is of the utmost importance to us that you get your perfect tattoo! </p>
 <!footer>
+</div>
 <div class = "footer">
   <div id ="footLeft"><p>Tel: 07525761214</p></div>
   <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
@@ -228,11 +239,14 @@ function verifyClient() {
     xhttp.send();
 }
 </script>
+
+
 <script>
 function verifyNo() {
     location.replace("http://phoebeplummer1.pythonanywhere.com/booking-request")
 }
 </script>
+
 <script>
 document.getElementById("clientYes").setCustomValidity('Must confirm client number before booking can be requested');
 </script>
@@ -246,4 +260,5 @@ function displayCheck() {
   }
 }
 </script>
+
 </body>
