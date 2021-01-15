@@ -1,0 +1,120 @@
+<html>
+<head>
+<link rel="stylesheet" href="static/tattoo.css">
+<style>
+#idCheck {
+    display: none;
+}
+</style>
+</head>
+<body>
+<div class = "header">
+    <a href = "/">
+        <img src="https://i.ibb.co/FwGkTmY/queen-bitch-logo.png" alt="logo" />
+    </a>
+    <h1>Queen Bitch Tattoo Studio</h1>
+</div>
+<div class="content">
+<h2>Employee site</h2>
+<h3>Edit booking details</h3>
+<form action ="{{url_for('editBooking') }}" method = "POST">
+    <div class="row">
+        <div class = "col15">
+            <label for "firstName">Client first name: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id="firstName" name="firstName" placeholder="Client first name..." required>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "col15">
+            <label for "surname">Client surname: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id= "surname" name="surname" placeholder="Client surname here..." required>
+        </div>
+    </div>
+    <br>
+    <button type="button" id="findButton" onclick="findClient(); displayCheck();">Find client</button>
+
+<p id="clientConfirm"></p>
+
+    <div id = "idCheck">
+        <div class="row">
+            <div class = "col15">
+                <label for "bookingID">ID of booking to be editted: </label>
+            </div>
+            <div class='col85'>
+                <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..." required>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class = "col15">
+            <label for "field">Field to be edited:</label>
+        </div>
+        <div class = "col85">
+            <select name="field" id="field" required>
+                <option value=email>email</option>
+                <option value=phone>phone</option>
+                <option value=description>description</option>
+                <option value=placement>placement</option>
+                <option value=sizeWidth>approximate width</option>
+                <option value=sizeLength>approximate length</option>
+                <!option value=bookedDate><!booked date>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class = "col15">
+            <label for "new">New entry: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" name="new" id="new" placeholder="New entry here..." required>
+        </div>
+    </div>
+    <p> <input type="submit" value="Submit"> </p>
+</form>
+</div>
+<!footer>
+<div class = "footer">
+  <div id ="footLeft"><p>Tel: 07525761214</p></div>
+  <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
+  <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
+</div>
+<script>
+function findClient() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("clientConfirm").innerHTML = this.responseText;
+        }
+    };
+    var firstName = document.getElementById("firstName").value
+    var surname = document.getElementById("surname").value
+    xhttp.open("GET", "/findClient?f="+firstName+"&s="+surname, true);
+    xhttp.send();
+}
+</script>
+
+<script>
+function displayCheck() {
+  var x = document.getElementById("idCheck");
+  if (x.style.display === "none") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+</script>
+
+<script>
+
+  document.getElementById("infoConfirm").setCustomValidity("Must confirm client info is correct before booking details can be editted");
+
+</script>
+
+</body>
+</html>
