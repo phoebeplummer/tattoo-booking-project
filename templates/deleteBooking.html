@@ -2,8 +2,12 @@
 <head>
 <link rel="stylesheet" href="static/tattoo.css">
 <style>
-#infoCheck {
+#idCheck {
     display: none;
+}
+
+input[type=submit] {
+    font-size: 13px;
 }
 </style>
 </head>
@@ -16,17 +20,43 @@
 </div>
 <div class="content">
 <h2>Employee site</h2>
-<h3>delete existing booking</h3>
+<h3>Delete existing booking</h3>
 <form action ="{{url_for('deleteBooking') }}" method = "POST">
-    <p>client first name:       <input type="text" name="firstName" id="firstName"></p>
-    <p>client surname:          <input type="text" name="surname" id="surname"></p>
-    <button type="button" onclick="findClient(); displayCheck();">Find client</button>
+    <div class="row">
+        <div class = "col15">
+            <label for "firstName">Client first name: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id="firstName" name="firstName" placeholder="Client first name..." required>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "col15">
+            <label for "surname">Client surname: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id= "surname" name="surname" placeholder="Client surname here..." required>
+        </div>
+    </div>
+    <br>
+    <button type="button" id="findButton" onclick="findClient(); displayCheck();">Find client</button>
+
 
 <p id="clientConfirm"></p>
 
-    <div id="infoCheck">
-    Is this correct?        <input  id="infoConfirm" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm client info is correct before booking can be deleted' : '');" type="checkbox" required name="infoConfirm"></div>
-    <button type="submit">delete booking</button>
+    <div id = "idCheck">
+        <div class="row">
+            <div class = "col15">
+                <label for "bookingID">ID of booking to be deleted: </label>
+            </div>
+            <div class='col85'>
+                <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..." required>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <input type="submit" value="Delete Booking">
     </form>
 </div>
 <!footer>
@@ -52,7 +82,7 @@ function findClient() {
 
 <script>
 function displayCheck() {
-  var x = document.getElementById("infoCheck");
+  var x = document.getElementById("idCheck");
   if (x.style.display === "none") {
     x.style.display = "none";
   } else {
@@ -60,11 +90,5 @@ function displayCheck() {
   }
 }
 </script>
-
-<script>
-
-  document.getElementById("infoConfirm").setCustomValidity("Must confirm client info is correct before booking can be deleted");
-
-</script>
-
 </body>
+</html>
