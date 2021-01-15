@@ -29,7 +29,7 @@ body {
     }
 }
 
-/*format header*/
+/*FORMAT HEADER*/
 .header {
     background-color: #221A2A;
     color: #FFFFFF;
@@ -54,7 +54,7 @@ body {
     left: 10px;
 }
 
-/*format footer*/
+/*FORMAT FOOTER*/
 .footer {
     position: fixed;
     left: 0;
@@ -85,4 +85,304 @@ body {
     width: 32.8%;
     float: left;
     text-align: right;
+}
+
+/*FORMAT RADIO BUTTONS*/
+/* The container for radio buttons*/
+.radioContainer {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+}
+
+/* Hide the browser's default radio button */
+.radioContainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.radioCheckmark {
+  position: absolute;
+  padding-top: 10px;
+  left: 65px;
+  height: 20px;
+  width: 20px;
+  background-color: #ccc;
+  border-radius: 50%;
+}
+
+/* On hover make button darker */
+.radioContainer:hover input ~ .radioCheckmark {
+  background-color: #aaa;
+}
+
+/* Add background when the radio button is checked */
+.radioContainer input:checked ~ .radioCheckmark {
+  background-color: #221A2A;
+}
+
+/* Make the indicator hidden when not checked */
+.radioCheckmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator when checked */
+.radioContainer input:checked ~ .radioCheckmark:after {
+  display: block;
+}
+
+/* Style the indicator */
+.radioContainer .radioCheckmark:after {
+ 	top: 6px;
+	left: 6px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+
+/*FORMAT SUBMIT BUTTONS*/
+input[type=submit] {
+    background-color: #655473;
+    font-size: 16px;
+    text-align: center;
+    width: 100px;
+    height: 50px;
+    border-radius: 30%;
+    border: 2px solid #221A2A;
+    color: #FFFFFF;
+    position: relative;
+    left: 50%;
+    margin-left: -52px
+}
+
+
+input[type=submit]:hover {
+  box-shadow: 0 15px 20px 0 rgba(0,0,0,0.24), 0 20px 50px 0 rgba(0,0,0,0.24);
+  cursor: pointer;
+}
+
+
+/*FORMAT FIND BUTTONS*/
+#findButton {
+    background-color: #655473;
+    border: 2px solid #221A2A;
+    border-radius: 30%;
+    color: #FFFFFF;
+    height: 40px;
+    width: 80px;
+    text-align: center;
+    font-size: 12px;
+    position: relative;
+    left: 50%;
+    margin-left: -42px;
+}
+
+#findButton:hover {
+    box-shadow: 0 15px 20px 0 rgba(0,0,0,0.24), 0 20px 50px 0 rgba(0,0,0,0.24);
+    cursor: pointer;
+}
+
+/*FORMAT CHECKBOXES*/
+/* Style the label */
+.checkboxContainer {
+  display: block;
+  position: relative;
+  padding-left: 15px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Hide the browser's default checkbox */
+.checkboxContainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.boxCheckmark {
+  position: absolute;
+  top: 15px;
+  left: 150px;
+  height: 18px;
+  width: 18px;
+  background-color: #ccc;
+  border: 1px solid #000000;
+}
+
+/* On mouse-over, make background darker */
+.checkboxContainer:hover input ~ .boxCheckmark {
+  background-color: #aaa;
+}
+
+/* When the checkbox is checked add background */
+.checkboxContainer input:checked ~ .boxCheckmark {
+  background-color: #221A2A;
+}
+
+/* Create checkmark */
+.boxCheckmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkboxContainer input:checked ~ .boxCheckmark:after {
+  display: block;
+}
+
+/* Style the checkmark */
+.checkboxContainer .boxCheckmark:after {
+  left: 5px;
+  top: 2px;
+  width: 3px;
+  height: 7px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/*FORMAT FORM ENTRY FIELDS AND LABELS*/
+/*format entry fields so they are next to label*/
+label {
+    padding: 15px 15px 15px 0;
+    display: inline-block;
+}
+
+input[type="text"], input[type="password"], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+/*create border when field is clicked on*/
+input:focus {
+    border: 3px solid #221A2A;
+}
+
+/*format labels*/
+.col15 {
+    float: left;
+    width: 15%;
+    margin-top: 6px;
+    padding-left: 15px;
+}
+
+/*format entry fields*/
+.col85 {
+    float: left;
+    width: 85%;
+    margin-top: 6px;
+}
+
+/*clear floats after the columns*/
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/*make entry fields go underneth label when screen is smaller*/
+@media screen and (max-width: 900px) {
+    .col15, .col85 {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+
+/*FORMAT NAVIGATION BUTTONS ON HOMEPAGE*/
+#requestButton, #loginButton {
+    background-color: #655473;
+    border: 2px solid #221A2A;
+    border-radius: 30%;
+    color: #FFFFFF;
+    height: 60px;
+    width: 120px;
+    text-align: center;
+    font-size: 12px;
+    text-decoration: none;
+    font-family: "bodoni", "georgia", serif
+}
+
+#requestButton:hover, #loginButton:hover {
+    box-shadow: 0 15px 20px 0 rgba(0,0,0,0.24), 0 20px 50px 0 rgba(0,0,0,0.24);
+    cursor: pointer;
+}
+
+
+#requestButton {
+    float: left;
+    margin-left: 25%;
+    margin-bottom: 90px;
+}
+
+#loginButton {
+    float: right;
+    margin-right: 25%;
+    margin-bottom: 90px;
+}
+
+/*clear hyperlink formatting*/
+#requestA:link, #loginA:link{
+    text-decoration: none;
+    color: #FFFFFF
+}
+
+#requestA:visited, #loginA:visited{
+    text-decoration: none;
+    color: #FFFFFF
+}
+
+#requestA:hover, #loginA:hover{
+    text-decoration: none;
+    color: #FFFFFF
+}
+
+#requestA:active, #loginA:active{
+    text-decoration: none;
+    color: #FFFFFF
+}
+
+/*FORMAT NAVIGATION BUTTONS ON EMPLOYEE HOMEPAGE*/
+.buttonLeft, .buttonRight {
+    background-color: #655473;
+    border: 2px solid #221A2A;
+    border-radius: 30%;
+    color: #FFFFFF;
+    height: 60px;
+    width: 120px;
+    text-align: center;
+    font-size: 12px;
+    text-decoration: none;
+    font-family: "bodoni", "georgia", serif
+}
+
+.buttonLeft:hover, .buttonRight:hover {
+    box-shadow: 0 15px 20px 0 rgba(0,0,0,0.24), 0 20px 50px 0 rgba(0,0,0,0.24);
+    cursor: pointer;
+}
+
+.buttonLeft {
+    float: left;
+    margin-left: 25%;
+}
+
+.buttonRight {
+    float: right;
+    margin-right: 25%;
 }
