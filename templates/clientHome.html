@@ -7,15 +7,14 @@ img {
   display: block;
   height: auto;
   width: 100%;
-  padding: 15px;
 }
 
 .overlay {
   position: absolute;
-  left: 15px;
-  bottom: 15px;
-  right: 15px;
-  top: 15px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  top: 0px;
   background: rgba(101, 84, 115, 0.5);
   color: #FFFFFF;
   width: 100%;
@@ -40,14 +39,14 @@ img {
 /*change number of photos in row depending on width of screen*/
 .container {
   position: relative;
-  width: 23%;
+  width: 25%;
   float: left;
   padding: 10px;
 }
 
 @media screen and (max-width: 1200px) {
     .container {
-        width: 47%;
+        width: 50%;
         float: left;
         padding: 10px;
     }
@@ -55,7 +54,7 @@ img {
 
 @media screen and (max-width: 690px) {
     .container {
-        width: 98%;
+        width: 100%;
     }
 }
 </style>
@@ -99,15 +98,12 @@ img {
         <div class="overlay"><h3>El Rose</h3></div>
     </div>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    <br> <br> <br> <br> <br> <br> <br> <br>
+
 <!link to request booking>
-    <button> <a href = "/booking-request"> Request a booking </a> </button>
+    <button id="requestButton"><a href = "/booking-request" id="requestA">Request a booking</a></button>
 <!link to employee login>
-    <button> <a href = "/employee-login">Employee Login </a> </button>
+    <button id="loginButton"><a href = "/employee-login" id="loginA">Employee Login</a></button>
 </div>
 <!footer>
 <div class = "footer">
