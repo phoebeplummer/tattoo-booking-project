@@ -11,12 +11,28 @@
 </div>
 
 <div class = "content">
-    <h2> employee login </h2>
+    <h2> Employee login </h2>
     <form action ="{{url_for('employeeLogin') }}" method = "POST">
-    <p>username:          <input type="text" name="username"></p>
-    <p>password:          <input type="password" name="password" id="password"></p>
+  <div class="row">
+        <div class = "col15">
+            <label for "username">Username: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" name="username" id="username" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "col15">
+            <label for "password">Password: </label>
+        </div>
+        <div class='col85'>
+            <input type="password" name="password" id="password" required>
+        </div>
+    </div>
     <input type="checkbox" onclick="showPassword()">Show Password
-    <input type = "submit">
+    <br>
+    <br>
+    <input type = "submit" value="Login">
 </div>
 
 <script>
