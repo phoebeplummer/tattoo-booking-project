@@ -1,0 +1,45 @@
+html>
+<head>
+<link rel="stylesheet" href="static/tattoo.css">
+</head>
+<body>
+<div class = "header">
+    <a href = "/">
+        <img src="https://i.ibb.co/FwGkTmY/queen-bitch-logo.png" alt="logo" />
+    </a>
+    <h1>Queen Bitch Tattoo Studio</h1>
+</div>
+<div class = "content">
+<h2>Employee site</h2>
+<h3>Outstanding Estimates</h3>
+    {% for row in rows %}
+    <input type="submit" onclick="findEstimateInfo(this)" value="{{row[0]}}">
+    <br> <br>
+    {% endfor %}
+
+<p id="estimateInfo"></p>
+
+</div>
+<!footer>
+<div class = "footer">
+  <div id ="footLeft"><p>Tel: 07525761214</p></div>
+  <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
+  <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
+</div>
+
+<script>
+function findEstimateInfo(thisValue) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("estimateInfo").innerHTML = this.responseText;
+        }
+    };
+    var bookingID = thisValue.value
+    xhttp.open("GET", "/findEstimateInfo?b="+bookingID, true);
+    xhttp.send();
+}
+</script>
+
+</body>
+</html>
