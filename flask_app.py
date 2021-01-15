@@ -47,7 +47,17 @@ def requestBookingNew():
         cursor.execute(sqlClientNo)
         clientNo = (cursor.fetchone()[0])
         bookingId = aFirstName[0] + aSurname[0] + str(clientNo) + str(aArtist)
-        bookingDetails.append(bookingId)
+        sqlCheckID = "SELECT * FROM tblBookings WHERE bookingID = " +"'" + bookingId + "'"
+        cursor.execute(sqlCheckID)
+        checkID = cursor.fetchall()
+        while checkID != None:
+            i = 1
+            bookingId = bookingId + str(i)
+            sqlCheckID = "SELECT * FROM tblBookings WHERE bookingID = " +"'" + bookingId + "'"
+            cursor.execute(sqlCheckID)
+            checkID = cursor.fetchall()
+            bookingDetails.append(bookingId)
+            i = i + 1
 #can then add rest of info from form
         bookingDetails.append(int(clientNo))
         bookingDetails.append(int(aArtist))
@@ -91,7 +101,8 @@ def requestBookingNew():
         sqltblBookings = "INSERT INTO tblBookings (bookingID, clientNumber, artistNumber, description, placement, sizeWidth, sizeLength, estimate, deposit, sessionLength, desiredMonth, receivedEstimate, confirmedBooking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(sqltblBookings, bookingDetails)
         conn.commit()
-        return "booking successfully requested"
+        msg = "Booking successfully requested"
+        return render_template("/result.html", msg=msg)
 
 #booking request for returning clients
 @app.route('/booking-request-returning-client', methods = ["GET", "POST"])
@@ -112,6 +123,17 @@ def requestBookingReturning():
         cursor.execute(sqlClientNo)
         clientNo = (cursor.fetchone()[0])
         bookingId = aFirstName[0] + aSurname[0] + str(clientNo) + str(aArtist)
+        sqlCheckID = "SELECT * FROM tblBookings WHERE bookingID = " +"'" + bookingId + "'"
+        cursor.execute(sqlCheckID)
+        checkID = cursor.fetchall()
+        while checkID != None:
+            i = 1
+            bookingId = bookingId + str(i)
+            sqlCheckID = "SELECT * FROM tblBookings WHERE bookingID = " +"'" + bookingId + "'"
+            cursor.execute(sqlCheckID)
+            checkID = cursor.fetchall()
+            bookingDetails.append(bookingId)
+            i = i + 1
         bookingDetails.append(bookingId)
 #can then add rest of info from form
         bookingDetails.append(int(clientNo))
@@ -156,9 +178,11 @@ def requestBookingReturning():
         sqltblBookings = "INSERT INTO tblBookings (bookingID, clientNumber, artistNumber, description, placement, sizeWidth, sizeLength, estimate, deposit, sessionLength, desiredMonth, receivedEstimate, confirmedBooking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(sqltblBookings, bookingDetails)
         conn.commit()
-        return "booking successfully requested"
+        msg = "Booking successfully requested"
+        return render_template("/result.html", msg=msg)
 
-#function to verify email in booking form
+
+#function to verify client number in booking form
 @app.route('/verifyClient')
 def verifyClient():
 #connect to database
@@ -170,10 +194,11 @@ def verifyClient():
     cursor.execute(sqlClientNo)
     clientNo = cursor.fetchone()
     if clientNo == None:
-        return "client not found in database"
+        return "Client not found in database. Please check you entered your name correctly or register as a new client."
     else:
         clientNo = str(clientNo[0])
         return "Please verify your unique clientNo is: "+ clientNo
+
 
 
 #login to employee site
@@ -192,7 +217,8 @@ def employeeLogin():
         correctPassword = cursor.fetchone()
 #check username is in system
         if correctPassword == None:
-            return "username not found in system"
+            msg = "username not found in system"
+            return render_template("/result.html", msg=msg)
 #check given password matches hashed password in database
 #first hash given password and remove salt from stored hashed password
         else:
@@ -205,7 +231,8 @@ def employeeLogin():
             if pwdHash == correctPassword:
                 return render_template("/employeeHome.html")
             else:
-                return 'username and password do not match'
+                msg = 'username and password do not match'
+                return render_template("/result.html", msg=msg)
 
 
 
@@ -224,12 +251,14 @@ def addEmployee():
         aPassword2 = request.form["password2"]
 #verify passwords match
         if aPassword1 != aPassword2:
-            return "passwords do not match"
+            msg = "Passwords do not match"
+            return render_template("/result.html", msg=msg)
 #check username is not already in system
         cursor.execute("SELECT * FROM tblLogin WHERE username =" + "'" + aUsername + "'")
         rows = cursor.fetchall()
         if len(rows) > 0:
-            return "username already in system"
+            msg = "Username already in system"
+            return render_template("/result.html", msg=msg)
 #hash password before storing in database
         salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
         pwdHash = hashlib.pbkdf2_hmac('sha512', aPassword1.encode('utf-8'), salt, 100000)
@@ -242,7 +271,8 @@ def addEmployee():
         sqlAddLogin = "INSERT INTO tblLogin (username, password) VALUES (?, ?)"
         cursor.execute(sqlAddLogin, newLogin)
         conn.commit()
-        return "new login added"
+        msg = "New login successfully added"
+        return render_template("/result.html", msg=msg)
 
 #add confirmed booking
 @app.route('/add-booking', methods =["GET", "POST"])
@@ -253,12 +283,7 @@ def addBooking():
     if request.method == "GET":
         return render_template('addBooking.html')
     if request.method == "POST":
-        aFirstName = request.form["firstName"]
-        aSurname = request.form["surname"]
- #fetch client number from database
-        sqlClientNo = "SELECT clientNumber FROM tblClients WHERE firstName =" + "'" + aFirstName + "'" + "AND surname =" + "'" + aSurname + "'"
-        cursor.execute(sqlClientNo)
-        clientNo = cursor.fetchone()
+        anID = request.form["bookingID"]
 #update database with confirmed booking details
         booking = []
         booking.append("Y")
@@ -268,16 +293,11 @@ def addBooking():
         booking.append(aMonth)
         aTime = request.form["sessionTime"]
         booking.append(aTime)
-        sqlConfirmed = "UPDATE tblBookings SET confirmedBooking = ? ,bookedDay = ?,bookedMonth = ? ,bookedTime = ? WHERE clientNumber =" + "'" + str(clientNo[0]) + "'"
-        try:
-            cursor.execute(sqlConfirmed, booking)
-            conn.commit()
-            msg = "booking confirmed"
-        except sqlite3.Error:
-            conn.rollback()
-            msg = 'the following error occured: ()'.format(sqlite3.Error)
-        finally:
-            return msg
+        sqlConfirmed = "UPDATE tblBookings SET confirmedBooking = ? ,bookedDay = ?,bookedMonth = ? ,bookedTime = ? WHERE bookingID =" + "'" + anID + "'"
+        cursor.execute(sqlConfirmed, booking)
+        conn.commit()
+        msg = "Booking confirmed"
+        return render_template("/result.html", msg=msg)
 
 
 
@@ -290,17 +310,7 @@ def editBooking():
     if request.method == "GET":
         return render_template('editBooking.html')
     if request.method == "POST":
-        aFirstName = request.form["firstName"]
-        aSurname = request.form["surname"]
- #fetch client number from database
-        sqlClientNo = "SELECT clientNumber FROM tblClients WHERE firstName =" + "'" + aFirstName + "'" + "AND surname =" + "'" + aSurname + "'"
-        cursor.execute(sqlClientNo)
-        clientNo = cursor.fetchone()
-#check client is in database
-        if clientNo == None:
-            return "client not found in system"
-        clientNo = clientNo[0]
-
+        anID = request.form["bookingID"]
         aField = request.form["field"]
         aNew = request.form["new"]
 #arrays to determine whether field to be editted is in tblBookings or tblClients
@@ -308,15 +318,24 @@ def editBooking():
         bookingDetails = ["description", "placement", "sizeWidth", "sizeLength"]
 #update field in tblClients
         if aField in clientDetails:
+ #fetch client number from database
+            aFirstName = request.form["firstName"]
+            aSurname = request.form["surname"]
+            sqlClientNo = "SELECT clientNumber FROM tblClients WHERE firstName =" + "'" + aFirstName + "'" + "AND surname =" + "'" + aSurname + "'"
+            cursor.execute(sqlClientNo)
+            clientNo = cursor.fetchone()
+            clientNo = clientNo[0]
             sqlUpdate = "UPDATE tblClients SET " + aField + "=" + "'" + aNew + "'" + " WHERE clientNumber =" + "'" + str(clientNo) + "'"
             cursor.execute(sqlUpdate)
             conn.commit()
-            return "updated"
+            msg = "Client details updated"
         elif aField in bookingDetails:
-            sqlUpdate = "UPDATE tblBookings SET " + aField + "=" + "'" + aNew + "'" + " WHERE clientNumber =" + "'" + str(clientNo) + "'"
+            sqlUpdate = "UPDATE tblBookings SET " + aField + "=" + "'" + aNew + "'" + " WHERE bookingID =" + "'" + anID + "'"
             cursor.execute(sqlUpdate)
             conn.commit()
-            return "updated"
+            msg = "Booking details updated"
+        return render_template("/result.html", msg=msg)
+
 
 @app.route('/findClient')
 def findClient():
@@ -325,6 +344,7 @@ def findClient():
     cursor = conn.cursor()
 #array of artist names
     artists = ["Lana Fern", "Peggy Brown", "Jodie Ahnien", "El Rose"]
+    bookingInfo = ""
 #fetch name from form
     firstName = request.args.get('f', '')
     surname = request.args.get('s', '')
@@ -334,14 +354,16 @@ def findClient():
     clientNo = cursor.fetchone()
 #if client is not in database
     if clientNo == None:
-        return "client not found in system"
+        return "Client not found in system"
 #find booking number
     sqlFindBooking = "SELECT bookingID, artistNumber FROM tblBookings WHERE clientNumber = " + str(clientNo[0])
     cursor.execute(sqlFindBooking)
     bookings = cursor.fetchall()
-#output check
     for row in bookings:
-        return "Client name: "+firstName+" "+surname+" Booking ID: "+row[0]+" Artist: "+artists[row[1]-1]
+        bookingInfo = bookingInfo + "Client name: "+firstName+" "+surname+" Booking ID: "+row[0]+" Artist: "+artists[row[1]-1] + "<br>"
+    return bookingInfo
+
+
 
 #delete existing booking
 @app.route("/delete-booking", methods=["GET", "POST"])
@@ -353,25 +375,12 @@ def deleteBooking():
     if request.method == "GET":
         return render_template('deleteBooking.html')
     if request.method == "POST":
-        aFirstName = request.form["firstName"]
-        aSurname = request.form["surname"]
-        sqlClientNo = "SELECT clientNumber FROM tblClients WHERE firstName =" + "'" + aFirstName + "'" + "AND surname =" + "'" + aSurname + "'"
-        cursor.execute(sqlClientNo)
-        clientNo = cursor.fetchone()
-        sqlDelete = "DELETE FROM tblBookings WHERE clientNumber =" + "'" + str(clientNo[0]) + "'"
+        anID = request.form["bookingID"]
+        sqlDelete = "DELETE FROM tblBookings WHERE clientNumber =" + "'" + anID + "'"
         cursor.execute(sqlDelete)
         conn.commit()
-        return "deleted"
-
-@app.route('/db-add')
-def add():
-    conn = sqlite3.connect('queen-bitch-db.db')
-    cursor = conn.cursor()
-    sqlAdd = "INSERT INTO tblClients (firstName, surname, email, phone) VALUES ('Charlie', 'Watts', 'charliewatts@hotmail.com', '07734893436')"
-    cursor.execute(sqlAdd)
-    conn.commit()
-    return "added"
-
+        msg = "Booking deleted"
+        return render_template("/result.html", msg=msg)
 
 
 #outstanding estimates
@@ -380,12 +389,7 @@ def printOutstandingEstimates():
 #connect to database
     conn = sqlite3.connect('queen-bitch-db.db')
     cursor = conn.cursor()
-    sqlList = "SELECT clientNumber FROM tblBookings WHERE receivedEstimate = 'N'"
+    sqlList = "SELECT bookingID FROM tblBookings WHERE receivedEstimate = 'N'"
     cursor.execute(sqlList)
     clients = cursor.fetchall()
     return render_template('outstandingEstimates.html', rows=clients)
-
-#def findEstimateInfo():
-#connect to database
-#    conn = sqlite3.connect('queen-bitch-db.db')
-#    cursor = conn.cursor()
