@@ -2,13 +2,9 @@
 <head>
 <link rel="stylesheet" href="static/tattoo.css">
 <style>
-#infoCheck {
+#idCheck {
     display: none;
 }
-* {
-  box-sizing: border-box;
-}
-
 </style>
 </head>
 <body>
@@ -21,83 +17,130 @@
 </div>
 <div class="content">
 <h2>Employee site</h2>
-<h3>add confirmed booking</h3>
+<h3>Add confirmed booking</h3>
 <form action ="{{url_for('addBooking') }}" method = "POST">
-    <p>client first name:       <input type="text" name="firstName" id="firstName"></p>
-    <p>client surname:          <input type="text" name="surname" id="surname"></p>
-    <button type="button" onclick="findClient(); displayCheck();">Find client</button>
+    <div class="row">
+        <div class = "col15">
+            <label for "firstName">Client first name: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id="firstName" name="firstName" placeholder="Client first name..." required>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "col15">
+            <label for "surname">Client surname: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id= "surname" name="surname" placeholder="Client surname here..." required>
+        </div>
+    </div>
+    <br>
+    <button type="button" id="findButton" onclick="findClient(); displayCheck();">Find client</button>
 
 <p id="clientConfirm"></p>
 
-    <div id="infoCheck">
-    Is this correct?        <input  id="infoConfirm" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm client info is correct before booking details can be editted' : '');" type="checkbox" required name="infoConfirm"></div>
-    <label for "day">Confirmed day:</label>
-    <select name="day" id="day" multiple>
-        <option value=1>1</option>
-        <option value=2>2</option>
-        <option value=3>3</option>
-        <option value=4>4</option>
-        <option value=5>5</option>
-        <option value=6>6</option>
-        <option value=7>7</option>
-        <option value=8>8</option>
-        <option value=9>9</option>
-        <option value=10>10</option>
-        <option value=11>11</option>
-        <option value=12>12</option>
-        <option value=13>13</option>
-        <option value=14>14</option>
-        <option value=15>15</option>
-        <option value=16>16</option>
-        <option value=17>17</option>
-        <option value=18>18</option>
-        <option value=19>19</option>
-        <option value=20>20</option>
-        <option value=21>21</option>
-        <option value=22>22</option>
-        <option value=23>23</option>
-        <option value=24>24</option>
-        <option value=25>25</option>
-        <option value=26>26</option>
-        <option value=27>27</option>
-        <option value=28>28</option>
-        <option value=29>29</option>
-        <option value=30>30</option>
-        <option value=31>31</option>
-    </select>
-    <label for "month">Confirmed month:</label>
-    <select name="month" id="month" multiple>
-        <option value="january">january</option>
-        <option value="february">february</option>
-        <option value="march">march</option>
-        <option value="april">april</option>
-        <option value="may">may</option>
-        <option value="june">june</option>
-        <option value="july">july</option>
-        <option value="august">august</option>
-        <option value="september">september</option>
-        <option value="october">october</option>
-        <option value="november">november</option>
-        <option value="december">december</option>
-    </select>
-    <label for "sessionTime">Booked time:</label>
-    <select name="sessionTime" id="sessionTime" multiple>
-        <option value="morning">morning</option>
-        <option value="afternoon">afternoon</option>
-        <option value="full day">full day</option>
-    </select>
+    <div id = "idCheck">
+        <div class="row">
+            <div class = "col15">
+                <label for "bookingID">ID of booking to be added: </label>
+            </div>
+            <div class='col85'>
+                <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..." required>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "col15">
+            <label for "day">Confirmed day:</label>
+        </div>
+        <div class = "col85">
+            <select name="day" id="day" required>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+                <option value=6>6</option>
+                <option value=7>7</option>
+                <option value=8>8</option>
+                <option value=9>9</option>
+                <option value=10>10</option>
+                <option value=11>11</option>
+                <option value=12>12</option>
+                <option value=13>13</option>
+                <option value=14>14</option>
+                <option value=15>15</option>
+                <option value=16>16</option>
+                <option value=17>17</option>
+                <option value=18>18</option>
+                <option value=19>19</option>
+                <option value=20>20</option>
+                <option value=21>21</option>
+                <option value=22>22</option>
+                <option value=23>23</option>
+                <option value=24>24</option>
+                <option value=25>25</option>
+                <option value=26>26</option>
+                <option value=27>27</option>
+                <option value=28>28</option>
+                <option value=29>29</option>
+                <option value=30>30</option>
+                <option value=31>31</option>
+            </select>
+        </div>
+    </div>
 
-    <p>Received deposit?        <input  id="deposit" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm deposit has been received before booking can be confirmed' : '');" type="checkbox" required name="deposit"></p>
+    <div class="row">
+        <div class = "col15">
+            <label for "month">Confirmed month:</label>
+        </div>
+        <div class = "col85">
+            <select name="month" id="month" required>
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class = "col15">
+            <label for "sessionTime">Booked time:</label>
+        </div>
+        <div class = "col85">
+            <select name="sessionTime" id="sessionTime" required>
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="full day">Full day</option>
+            </select>
+        </div>
+    </div>
+
+    <label class="checkboxContainer">Received deposit?
+        <input type="checkbox" id="deposit" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm deposit has been received before booking can be confirmed' : '');" type="checkbox" required name="deposit">
+        <span class="boxCheckmark"></span>
+    </label>
+
     <p> <input type="submit"> </p>
 </form>
+
+</div>
 
 <!footer>
 <div class = "footer">
   <div id ="footLeft"><p>Tel: 07525761214</p></div>
   <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
   <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
-</div>
-
 </div>
 
 <script>
@@ -121,17 +164,13 @@ function findClient() {
 
 <script>
 function displayCheck() {
-  var x = document.getElementById("infoCheck");
+  var x = document.getElementById("idCheck");
   if (x.style.display === "none") {
     x.style.display = "none";
   } else {
     x.style.display = "block";
   }
 }
-</script>
-
-<script>
-  document.getElementById("infoConfirm").setCustomValidity("Must confirm client info is correct before booking details can be editted");
 </script>
 
 </body>
