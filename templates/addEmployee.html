@@ -10,12 +10,33 @@
     <h1>Queen Bitch Tattoo Studio</h1>
 </div>
 <div class ="content">
-<h2>add employee login</h2>
+<h2>Add employee login</h2>
     <form action ="{{url_for('addEmployee') }}" method = "POST">
-    <p>username:            <input type="text" name="username"></p>
-    <p>password:            <input type="password" name="password1"></p>
-    <p>re-enter password:   <input type="password" name="password2"></p>
-    <input type = "submit">
+    <div class="row">
+        <div class = "col15">
+            <label for "username">Username: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" name="username" id="username" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "col15">
+            <label for "password">Password: </label>
+        </div>
+        <div class='col85'>
+            <input type="password" name="password1" id="password1" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "col15">
+            <label for "password">Re-enter password: </label>
+        </div>
+        <div class='col85'>
+            <input type="password" name="password2" id="password2" required>
+        </div>
+    </div>
+    <input type = "submit" value="Submit">
 </form>
 <!footer>
 <div class = "footer">
