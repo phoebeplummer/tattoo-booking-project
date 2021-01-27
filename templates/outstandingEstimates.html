@@ -1,6 +1,32 @@
-html>
+<html>
 <head>
 <link rel="stylesheet" href="static/tattoo.css">
+<style>
+input[type=submit] {
+    float: left;
+    width: 7%;
+    left: 0%;
+    margin-left: 10px;
+    position: absolute;
+}
+#estimateInfo {
+    float: right;
+    margin-right: 15%;
+    width: 280px;
+    padding: 10px;
+    position: absolute;
+    margin-left: 50px;
+    background-color: #655473;
+    border: 2px solid #221A2A;
+    color: #FFFFFF;
+    top: 270;
+    left: 300;
+    display: none;
+}
+.boxCheckmark {
+    margin-left: 100px;
+}
+</style>
 </head>
 <body>
 <div class = "header">
@@ -13,11 +39,21 @@ html>
 <h2>Employee site</h2>
 <h3>Outstanding Estimates</h3>
     {% for row in rows %}
-    <input type="submit" onclick="findEstimateInfo(this)" value="{{row[0]}}">
-    <br> <br>
+    <input type="submit" onclick="findEstimateInfo(this); displayEstimate()" value="{{row[0]}}">
+    <br><br><br>
     {% endfor %}
 
+
 <p id="estimateInfo"></p>
+
+    <label class="checkboxContainer">Confirm estimate has been sent
+        <input type="checkbox" id="estimateSent" onclick="estimateSent(this)">
+        <span class="boxCheckmark"></span>
+    </label>
+
+
+<p id = "confirmSent"></p>
+
 
 </div>
 <!footer>
@@ -38,6 +74,27 @@ function findEstimateInfo(thisValue) {
     var bookingID = thisValue.value
     xhttp.open("GET", "/findEstimateInfo?b="+bookingID, true);
     xhttp.send();
+}
+
+function estimateSent(thisValue) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("confirmSent").innerHTML = this.responseText;
+        }
+    };
+    var bookingID = thisValue.value
+    xhttp.open("GET", "/estimateSent?b="+bookingID, true);
+    xhttp.send();
+}
+
+function displayEstimate() {
+  var x = document.getElementById("estimateInfo");
+  if (x.style.display === "none") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
 }
 </script>
 
