@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="static/tattoo.css">
 </head>
 <body>
+<!header>
 <div class = "header">
     <a href = "/">
         <img src="https://i.ibb.co/FwGkTmY/queen-bitch-logo.png" alt="logo" />
@@ -11,7 +12,11 @@
 </div>
 <div class ="content">
 <h2>Add employee login</h2>
+
+<!connect form to flask function>
     <form action ="{{url_for('addEmployee') }}" method = "POST">
+
+<!enter username>
     <div class="row">
         <div class = "col15">
             <label for "username">Username: </label>
@@ -20,30 +25,152 @@
             <input type="text" name="username" id="username" required>
         </div>
     </div>
+
+<!enter password>
     <div class="row">
         <div class = "col15">
             <label for "password">Password: </label>
         </div>
         <div class='col85'>
-            <input type="password" name="password1" id="password1" required>
+            <input type="password" name="password1" id="password1" onfocus="showMsg()" onblur="hideMsg()" required>
         </div>
     </div>
+
+<!enter password twice to verify>
     <div class="row">
         <div class = "col15">
             <label for "password">Re-enter password: </label>
         </div>
         <div class='col85'>
-            <input type="password" name="password2" id="password2" required>
+            <input type="password" name="password2" id="password2" onfocus="showMsg()" onblur="hideMsg()" required>
         </div>
     </div>
-    <input type = "submit" value="Submit">
-</form>
+
+
+<!checkbox to show password>
+    <label class="checkboxContainer">Show Passwords
+        <input type="checkbox" id="showPsw" name="showPsw" onclick="showPassword()">
+        <span class="boxCheckmark"></span>
+    </label>
+
+    <br>
+
+    <input type ="submit" value="Submit">
+
+    </form>
+
+<!password requirements message>
+<div id="pswMsg">
+    <h3>Password must contain the following:</h4>
+    <p id="minLength" class="invalid">At least <b>8 characters</b></p>
+    <p id="lowercase" class="invalid">A <b>lowercase</b> letter</p>
+    <p id="uppercase" class="invalid">A <b>uppercase</b> letter</p>
+    <p id="number" class="invalid">A <b>number</b></p>
+    <p id="specialChar" class="invalid">A <b>special character</b> e.g. !, #, ?</p>
+</div>
+
+</div>
+
 <!footer>
 <div class = "footer">
   <div id ="footLeft"><p>Tel: 07525761214</p></div>
   <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
   <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
 </div>
-</div>
 </body>
+<script>
+
+//display passwords as text when checkbox is clicked
+function showPassword() {
+    var x = document.getElementById("password1");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+    var y = document.getElementById("password2");
+    if (y.type === "password") {
+        y.type = "text";
+    } else {
+        y.type = "password";
+    }
+}
+
+//get variables from body
+var pswInput = document.getElementById("password1");
+var minLength = document.getElementById("minLength");
+var lowercase = document.getElementById("lowercase");
+var uppercase = document.getElementById("uppercase");
+var number = document.getElementById("number");
+var specialChar = document.getElementById("specialChar");
+
+//show the message box hen the user clicks on the password field
+function showMsg() {
+    document.getElementById("pswMsg").style.display = "block";
+}
+
+//hide the message box hen the user clicks off the password field
+function hideMsg() {
+    document.getElementById("pswMsg").style.display = "none";
+}
+
+
+//when the user starts to type something inside the password field
+pswInput.onkeyup = function() {
+//validate length
+    if(pswInput.value.length >= 8) {
+        minLength.classList.remove("invalid");
+        minLength.classList.add("valid");
+    } else {
+        minLength.classList.remove("valid");
+        minLength.classList.add("invalid");
+    }
+
+
+
+//validate lowercase letters
+    var lowerCaseLetters = /[a-z]/g;
+    if(pswInput.value.match(lowerCaseLetters)) {
+        lowercase.classList.remove("invalid");
+        lowercase.classList.add("valid");
+    } else {
+        lowercase.classList.remove("valid");
+        lowercase.classList.add("invalid");
+    }
+
+//validate uppercase letters
+    var upperCaseLetters = /[A-Z]/g;
+    if(pswInput.value.match(upperCaseLetters)) {
+        uppercase.classList.remove("invalid");
+        uppercase.classList.add("valid");
+    } else {
+        uppercase.classList.remove("valid");
+        uppercase.classList.add("invalid");
+    }
+
+
+//validate numbers
+    var numbers = /[0-9]/g;
+    if(pswInput.value.match(numbers)) {
+        number.classList.remove("invalid");
+        number.classList.add("valid");
+    } else {
+        number.classList.remove("valid");
+        number.classList.add("invalid");
+    }
+
+//validate special characters
+    var numbers = /[$£&+,:;=?@#|'<>.^*()%!-]/g;
+    if(pswInput.value.match(numbers)) {
+        specialChar.classList.remove("invalid");
+        specialChar.classList.add("valid");
+    } else {
+        specialChar.classList.remove("valid");
+        specialChar.classList.add("invalid");
+    }
+}
+
+
+</script>
+
 </html>
