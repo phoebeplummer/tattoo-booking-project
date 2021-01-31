@@ -290,6 +290,15 @@ input:focus {
     margin-top: 6px;
 }
 
+/*format larger label*/
+.col50 {
+    float: left;
+    width: 30%;
+    margin-top: 6px;
+    padding-left: 15px;
+}
+
+
 /*clear floats after the columns*/
 .row:after {
     content: "";
@@ -303,6 +312,15 @@ input:focus {
         width: 100%;
         margin-top: 0;
     }
+}
+
+#description {
+    height: 100px;
+}
+
+#bookInfo {
+    padding: 10px;
+    text-align: justify;
 }
 
 /*FORMAT NAVIGATION BUTTONS ON HOMEPAGE*/
@@ -385,4 +403,45 @@ input:focus {
 .buttonRight {
     float: right;
     margin-right: 25%;
+}
+
+
+/*STYLE PASSWORD VALIDATION MESSAGE FOR ADDING EMPLOYEE LOGIN*/
+/*style message box*/
+#pswMsg {
+    display: none;
+    background-color: #655473;
+    border: 3px solid #221A2A;
+    position: relative;
+    padding: 15px;
+    margin: 10px;
+    font-size: 16px;
+    color: #FFFFFF;
+}
+
+#pswMsg p{
+    padding-left: 35px;
+}
+
+/* Add a white text color and a tick when the requirements are met */
+.valid {
+  color: #FFFFFF;
+}
+
+.valid:before {
+  position: relative;
+  left: -35px;
+  content: "✔";
+}
+
+
+/* Add a black text color and an "x" when the requirements are not met */
+.invalid {
+  color: #000000;
+}
+
+.invalid:before {
+  position: relative;
+  left: -35px;
+  content: "✖";
 }
