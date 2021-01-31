@@ -2,13 +2,16 @@
 <head>
 <link rel="stylesheet" href="static/tattoo.css">
 <style>
-input[type=submit] {
+/*style ID buttons*/
+input[type=submit]:not(#estimateButton) {
     float: left;
     width: 7%;
     left: 0%;
     margin-left: 10px;
     position: absolute;
 }
+
+/*style client estimate information*/
 #estimateInfo {
     float: right;
     margin-right: 15%;
@@ -19,13 +22,23 @@ input[type=submit] {
     background-color: #655473;
     border: 2px solid #221A2A;
     color: #FFFFFF;
-    top: 270;
-    left: 300;
+    top: 270px;
+    left: 300px;
+}
+
+/*only display estimate info what button is clicked*/
+#estimate{
     display: none;
 }
-.boxCheckmark {
-    margin-left: 100px;
+
+/*format confirm estimate sent button*/
+#estimateButton {
+    font-size: 14px;
+    width: 225px;
+    height: 50px;
+    left: 420px;
 }
+
 </style>
 </head>
 <body>
@@ -38,21 +51,22 @@ input[type=submit] {
 <div class = "content">
 <h2>Employee site</h2>
 <h3>Outstanding Estimates</h3>
+
     {% for row in rows %}
-    <input type="submit" onclick="findEstimateInfo(this); displayEstimate()" value="{{row[0]}}">
+    <input type="submit" onclick="findEstimateInfo(this); saveVar(this); displayEstimate()" value="{{row[0]}}">
     <br><br><br>
     {% endfor %}
 
 
-<p id="estimateInfo"></p>
+<div id ="estimate">
 
-    <label class="checkboxContainer">Confirm estimate has been sent
-        <input type="checkbox" id="estimateSent" onclick="estimateSent(this)">
-        <span class="boxCheckmark"></span>
-    </label>
+    <p id="estimateInfo"></p>
 
+    <input type ="submit" value="Confirm estimate has been sent" onclick="estimateSent()" id="estimateButton">
 
-<p id = "confirmSent"></p>
+    <p id = "confirmSent"></p>
+
+</div>
 
 
 </div>
@@ -64,6 +78,13 @@ input[type=submit] {
 </div>
 
 <script>
+
+var bookingID = ""
+
+function saveVar(b) {
+    bookingID = b.value
+}
+
 function findEstimateInfo(thisValue) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -76,20 +97,20 @@ function findEstimateInfo(thisValue) {
     xhttp.send();
 }
 
-function estimateSent(thisValue) {
+
+function estimateSent(bookID) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             document.getElementById("confirmSent").innerHTML = this.responseText;
         }
     };
-    var bookingID = thisValue.value
     xhttp.open("GET", "/estimateSent?b="+bookingID, true);
     xhttp.send();
 }
 
 function displayEstimate() {
-  var x = document.getElementById("estimateInfo");
+  var x = document.getElementById("estimate");
   if (x.style.display === "none") {
     x.style.display = "none";
   } else {
