@@ -9,12 +9,7 @@
   box-sizing: border-box;
 }
 
-/*format entry fields so they are next to label*/
-label {
-    padding: 15px 15px 15px 0;
-    display: inline-block;
-}
-
+/*ensure all input fields have correct formatting*/
 input, select, textarea {
     width: 100%;
     padding: 12px;
@@ -22,68 +17,6 @@ input, select, textarea {
     border-radius: 4px;
     resize: vertical;
 }
-
-input:focus {
-    border: 3px solid #221A2A;
-}
-
-.col15 {
-    float: left;
-    width: 15%;
-    margin-top: 6px;
-    padding-left: 15px;
-}
-
-.col85 {
-    float: left;
-    width: 85%;
-    margin-top: 6px;
-}
-
-/*clear floats after the columns*/
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-/*make entry fields go underneth label when screen is smaller*/
-@media screen and (max-width: 900px) {
-    .col15, .col85, input[type=submit] {
-        width: 100%;
-        margin-top: 0;
-    }
-}
-
-/*make entry field for description larger than other entry fields*/
-#description {
-    height: 100px;
-}
-
-input[type=submit] {
-    background-color: #655473;
-    font-size: 16px;
-    width: 100px;
-    height: 50px;
-    border-radius: 30%;
-    border: 3px solid #221A2A;
-    color: #FFFFFF;
-    position: absolute;
-    left: 50%;
-    margin-left: -50px
-}
-
-input[type=submit]:hover {
-  box-shadow: 0 15px 20px 0 rgba(0,0,0,0.24), 0 20px 50px 0 rgba(0,0,0,0.24);
-  cursor: pointer;
-}
-
-#bookInfo {
-    padding: 10px;
-    text-align: justify;
-}
-
-
 </style>
 </head>
 <body>
@@ -167,13 +100,14 @@ input[type=submit]:hover {
             <input type="text" id="placement" name="placement" placeholder="Your tattoo placement here..." required>
         </div>
     </div>
+
 <!field: width>
     <div class="row">
         <div class = "col15">
             <label for "sizeWidth">Width of tattoo (cm): </label>
         </div>
         <div class = "col85">
-            <input type="number" step =0.5 min= 0 id="sizeWidth" name="sizeWidth" placeholder="Your approximate tattoo width here..." required>
+            <input type="number" step=0.5 min=0.5 max=100 id="sizeWidth" name="sizeWidth" placeholder="Your approximate tattoo width here..." required>
         </div>
     </div>
 <!field: length>
@@ -182,9 +116,10 @@ input[type=submit]:hover {
             <label for "sizeLength">Length of tattoo (cm): </label>
         </div>
         <div class = "col85">
-            <input type="number" step =0.5 min= 0 id="sizeLength" name="sizeLength" placeholder="Your approximate tattoo length here..." required>
+            <input type="number" step=0.5 min=0.5 max=100 id="sizeLength" name="sizeLength" placeholder="Your approximate tattoo length here..." required>
         </div>
     </div>
+
 <!field: month>
     <div class="row">
         <div class = "col15">
@@ -238,19 +173,13 @@ function verifyClient() {
     xhttp.open("GET", "/verifyClient?f="+firstName+"&s="+surname, true);
     xhttp.send();
 }
-</script>
 
-
-<script>
 function verifyNo() {
     location.replace("http://phoebeplummer1.pythonanywhere.com/booking-request")
 }
-</script>
 
-<script>
 document.getElementById("clientYes").setCustomValidity('Must confirm client number before booking can be requested');
-</script>
-<script>
+
 function displayCheck() {
   var x = document.getElementById("clientNoCheck");
   if (x.style.display === "none") {
@@ -259,6 +188,49 @@ function displayCheck() {
     x.style.display = "block";
   }
 }
+
+//validate first name and last name
+function allLetters(thisValue) {
+    var valid = /^[A-Za-z]+$/
+    if (thisValue.value.match(valid)) {
+        var valid = "y";
+    }
+    else {
+        alert("Please enter name in valid format. Name may contain letters only.");
+    }
+}
+
+//validate phone number
+function validatePhone() {
+    var phone = document.getElementById('phone')
+    var valid = /^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/
+    if (phone.value.match(valid)) {
+        var valid = "y";
+    }
+    else {
+        alert("Please enter a valid phone number. Phone number must start with 07 or +447 followed by 9 digits.");
+    }
+}
+
+//validate email
+function validateEmail() {
+    var email = document.getElementById('email')
+    var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (email.value.match(valid)) {
+        var valid = "y";
+    }
+    else {
+        alert("Please enter a email in valid format.");
+    }
+}
+
+//validate decsription
+function validateDesc(thisValue) {
+    if (thisValue.value.length > 800) {
+        alert('Description must be less than 800 characters.')
+    }
+}
 </script>
 
 </body>
+</html>
