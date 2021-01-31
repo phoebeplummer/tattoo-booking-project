@@ -6,12 +6,7 @@
   box-sizing: border-box;
 }
 
-/*format entry fields so they are next to label*/
-label {
-    padding: 15px 15px 15px 0;
-    display: inline-block;
-}
-
+/*ensure all input fields have correct formatting*/
 input, select, textarea {
     width: 100%;
     padding: 12px;
@@ -20,78 +15,11 @@ input, select, textarea {
     resize: vertical;
 }
 
-input:focus {
-    border: 3px solid #221A2A;
+/*move checkbox next to text*/
+.boxCheckmark {
+    left: 330px;
 }
 
-.col15 {
-    float: left;
-    width: 15%;
-    margin-top: 6px;
-    padding-left: 15px;
-}
-
-.col85 {
-    float: left;
-    width: 85%;
-    margin-top: 6px;
-}
-
-.col50 {
-    float: left;
-    width: 30%;
-    margin-top: 6px;
-    padding-left: 15px;
-}
-
-.checkbox {
-    float: left;
-    padding-top: 20px;
-    width: 15px;
-
-}
-
-/*clear floats after the columns*/
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-/*make entry fields go underneth label when screen is smaller*/
-@media screen and (max-width: 900px) {
-    .col15, .col85, input[type=submit] {
-        width: 100%;
-        margin-top: 0;
-    }
-}
-
-#description {
-    height: 100px;
-}
-
-input[type=submit] {
-    background-color: #655473;
-    font-size: 16px;
-    width: 100px;
-    height: 50px;
-    border-radius: 30%;
-    border: 3px solid #221A2A;
-    color: #FFFFFF;
-    position: absolute;
-    left: 50%;
-    margin-left: -50px
-}
-
-input[type=submit]:hover {
-  box-shadow: 0 15px 20px 0 rgba(0,0,0,0.24), 0 20px 50px 0 rgba(0,0,0,0.24);
-  cursor: pointer;
-}
-
-#bookInfo {
-    padding: 10px;
-    text-align: justify;
-}
 </style>
 </head>
 <body>
@@ -106,52 +34,57 @@ input[type=submit]:hover {
 <!form to request booking>
     <h1>Booking Form</h1>
     <div class="row">
-        <div class='col50'>
-            <label for "bookedB4">Have you booked with Queen Bitch before? </label>
-        </div>
-        <div class="checkbox">
-            <input type="checkbox" id="bookedB4" name="bookedB4" onclick="bookedB4()">
-        </div>
+            <label class="checkboxContainer">Have you booked with Queen Bitch before?
+                <input type="checkbox" id="bookedB4" onclick="bookedB4()" required name="bookedB4">
+                <span class="boxCheckmark"></span>
+            </label>
     </div>
-
     <h4>Please fill out all fields and click submit to request a tattoo booking</h4>
     <form action ="{{url_for('requestBookingNew') }}" method = "POST">
+
 <!field: first name>
     <div class="row">
         <div class = "col15">
             <label for "firstName">First name: </label>
         </div>
         <div class='col85'>
-            <input type="text" id="firstName" name="firstName" placeholder="Your first name..." required>
+            <input type="text" id="firstName" name="firstName" placeholder="Your first name..." onblur="allLetters(this)" required>
         </div>
     </div>
+
 <!field: surname>
     <div class="row">
         <div class = "col15">
             <label for "surname">Surname: </label>
         </div>
         <div class='col85'>
-            <input type="text" id= "surname" name="surname" placeholder="Your surname here..." required>
+            <input type="text" id= "surname" name="surname" placeholder="Your surname here..." onblur="allLetters(this)" required>
         </div>
     </div>
+
+
 <!field: email address>
     <div class="row">
         <div class = "col15">
             <label for "email">Email address: </label>
         </div>
         <div class='col85'>
-            <input type="text" id="email" name="email" placeholder="Your email here..." required>
+            <input type="text" id="email" name="email" placeholder="Your email here..." onblur="validateEmail()" required>
         </div>
     </div>
+
+
 <!field: phone number>
     <div class="row">
         <div class = "col15">
             <label for "phone">Phone number: </label>
         </div>
         <div class='col85'>
-            <input type="text" id="phone" name="phone" placeholder="Your phone number here..." required>
+            <input type="text" id="phone" name="phone" placeholder="Your phone number here..." onblur="validatePhone()" required>
         </div>
     </div>
+
+
 <!field: artist>
     <div class="row">
         <div class = "col15">
@@ -166,15 +99,18 @@ input[type=submit]:hover {
             </select>
         </div>
     </div>
+
 <!field: description>
     <div class="row">
         <div class = "col15">
             <label for "description">Description: </label>
         </div>
         <div class = "col85" id="description">
-            <input type="text" id="description" name="description" placeholder="Your tattoo description here..." required>
+            <input type="text" id="description" name="description" placeholder="Your tattoo description here..." onblur="validateDesc(this)" required>
         </div>
     </div>
+
+
 <!field: placement>
     <div class="row">
         <div class = "col15">
@@ -190,7 +126,7 @@ input[type=submit]:hover {
             <label for "sizeWidth">Width of tattoo (cm): </label>
         </div>
         <div class = "col85">
-            <input type="number" step =0.5 min= 0 id="sizeWidth" name="sizeWidth" placeholder="Your approximate tattoo width here..." required>
+            <input type="number" step =0.5 min=0 max=100 id="sizeWidth" name="sizeWidth" placeholder="Your approximate tattoo width here..." required>
         </div>
     </div>
 <!field: length>
@@ -199,7 +135,7 @@ input[type=submit]:hover {
             <label for "sizeLength">Length of tattoo (cm): </label>
         </div>
         <div class = "col85">
-            <input type="number" step =0.5 min= 0 id="sizeLength" name="sizeLength" placeholder="Your approximate tattoo length here..." required>
+            <input type="number" step =0.5 min= 0 max=100 id="sizeLength" name="sizeLength" placeholder="Your approximate tattoo length here..." required>
         </div>
     </div>
 <!field: month>
@@ -248,8 +184,49 @@ input[type=submit]:hover {
 function bookedB4() {
     location.replace("http://phoebeplummer1.pythonanywhere.com/booking-request-returning-client")
 }
+
+//validate first name and last name
+function allLetters(thisValue) {
+    var valid = /^[A-Za-z]+$/
+    if (thisValue.value.match(valid)) {
+        var valid = "y";
+    }
+    else {
+        alert("Please enter name in valid format. Name may contain letters only.");
+    }
+}
+
+//validate phone number
+function validatePhone() {
+    var phone = document.getElementById('phone')
+    var valid = /^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/
+    if (phone.value.match(valid)) {
+        var valid = "y";
+    }
+    else {
+        alert("Please enter a valid phone number. Phone number must start with 07 or +447 followed by 9 digits.");
+    }
+}
+
+//validate email
+function validateEmail() {
+    var email = document.getElementById('email')
+    var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (email.value.match(valid)) {
+        var valid = "y";
+    }
+    else {
+        alert("Please enter a email in valid format.");
+    }
+}
+
+//validate decsription
+function validateDesc(thisValue) {
+    if (thisValue.value.length > 800) {
+        alert('Description must be less than 800 characters.')
+    }
+}
 </script>
-
-
 </body>
 </html>
+
