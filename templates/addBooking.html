@@ -36,10 +36,13 @@
         </div>
     </div>
     <br>
+<!call AJAX function to find client details>
     <button type="button" id="findButton" onclick="findClient(); displayCheck();">Find client</button>
 
+<!display results of AJAX function>
 <p id="clientConfirm"></p>
 
+<!confirm correct booking is being edited by input booking ID>
     <div id = "idCheck">
         <div class="row">
             <div class = "col15">
@@ -50,6 +53,7 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class = "col15">
             <label for "day">Confirmed day:</label>
@@ -127,11 +131,11 @@
     </div>
 
     <label class="checkboxContainer">Received deposit?
-        <input type="checkbox" id="deposit" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm deposit has been received before booking can be confirmed' : '');" type="checkbox" required name="deposit">
+        <input type="checkbox" id="deposit" name="deposit" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm deposit has been received before booking can be confirmed' : '');" required>
         <span class="boxCheckmark"></span>
     </label>
 
-    <p> <input type="submit"> </p>
+    <p> <input type="submit" value="Submit"> </p>
 </form>
 
 </div>
