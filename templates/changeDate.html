@@ -1,0 +1,167 @@
+<html>
+<head>
+<link rel="stylesheet" href="static/tattoo.css">
+<style>
+#idCheck {
+    display: none;
+}
+</style>
+</head>
+<body>
+<!header>
+<div class = "header">
+    <a href = "/">
+        <img src="https://i.ibb.co/FwGkTmY/queen-bitch-logo.png" alt="logo" />
+    </a>
+    <h1>Queen Bitch Tattoo Studio</h1>
+</div>
+<div class="content">
+<h2>Employee site</h2>
+<h3>Change confirmed booking date</h3>
+<!connect form to flask app>
+<form action ="{{url_for('changeDate') }}" method = "POST">
+    <div class="row">
+        <div class = "col15">
+            <label for "firstName">Client first name: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id="firstName" name="firstName" placeholder="Client first name..." required>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "col15">
+            <label for "surname">Client surname: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id= "surname" name="surname" placeholder="Client surname here..." required>
+        </div>
+    </div>
+    <br>
+<!call AJAX function to find client details>
+    <button type="button" id="findButton" onclick="findClient(); displayCheck();">Find client</button>
+
+<!display results of AJAX function>
+<p id="clientConfirm"></p>
+
+<!confirm correct booking is being edited by input booking ID>
+    <div id = "idCheck">
+        <div class="row">
+            <div class = "col15">
+                <label for "bookingID">ID of booking to be editted: </label>
+            </div>
+            <div class='col85'>
+                <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..." required>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class = "col15">
+            <label for "day">New day:</label>
+        </div>
+        <div class = "col85">
+            <select name="day" id="day" required>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+                <option value=6>6</option>
+                <option value=7>7</option>
+                <option value=8>8</option>
+                <option value=9>9</option>
+                <option value=10>10</option>
+                <option value=11>11</option>
+                <option value=12>12</option>
+                <option value=13>13</option>
+                <option value=14>14</option>
+                <option value=15>15</option>
+                <option value=16>16</option>
+                <option value=17>17</option>
+                <option value=18>18</option>
+                <option value=19>19</option>
+                <option value=20>20</option>
+                <option value=21>21</option>
+                <option value=22>22</option>
+                <option value=23>23</option>
+                <option value=24>24</option>
+                <option value=25>25</option>
+                <option value=26>26</option>
+                <option value=27>27</option>
+                <option value=28>28</option>
+                <option value=29>29</option>
+                <option value=30>30</option>
+                <option value=31>31</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class = "col15">
+            <label for "month">New month:</label>
+        </div>
+        <div class = "col85">
+            <select name="month" id="month" required>
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class = "col15">
+            <label for "sessionTime">New booked time:</label>
+        </div>
+        <div class = "col85">
+            <select name="sessionTime" id="sessionTime" required>
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="full day">Full day</option>
+            </select>
+        </div>
+    </div>
+    <p> <input type="submit" value="Submit"> </p>
+</form>
+
+<!footer>
+<div class = "footer">
+  <div id ="footLeft"><p>Tel: 07525761214</p></div>
+  <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
+  <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
+</div>
+<script>
+function findClient() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("clientConfirm").innerHTML = this.responseText;
+        }
+    };
+    var firstName = document.getElementById("firstName").value
+    var surname = document.getElementById("surname").value
+    xhttp.open("GET", "/findClient?f="+firstName+"&s="+surname, true);
+    xhttp.send();
+}
+
+function displayCheck() {
+  var x = document.getElementById("idCheck");
+  if (x.style.display === "none") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+</script>
+</body>
+</html>
