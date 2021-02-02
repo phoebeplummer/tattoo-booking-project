@@ -130,10 +130,7 @@
         </div>
     </div>
 
-    <label class="checkboxContainer">Received deposit?
-        <input type="checkbox" id="deposit" name="deposit" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm deposit has been received before booking can be confirmed' : '');" required>
-        <span class="boxCheckmark"></span>
-    </label>
+    <input type="checkbox" id="deposit" name="deposit" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm deposit has been received before booking can be confirmed' : '');" required>
 
     <p> <input type="submit" value="Submit"> </p>
 </form>
