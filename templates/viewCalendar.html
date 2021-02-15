@@ -1,0 +1,145 @@
+<html>
+<head>
+<link rel="stylesheet" href="static/tattoo.css">
+<style>
+* {
+    box-sizing: border-box;
+}
+
+ul {
+    list-style-type: none;
+}
+
+/* style month title */
+.month {
+  padding: 70px 25px;
+  width: 100%;
+  background: #655473;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/*style weekdays*/
+.weekdays {
+  margin: 0;
+  padding: 10px 0;
+  background-color: #C3C1C4;
+}
+
+.weekdays li {
+  display: inline-block;
+  width: 13.6%;
+  color: #000000;
+  text-align: center;
+}
+
+/*style days*/
+.days {
+  padding: 10px 0;
+  background: #EBE8ED;
+  margin: 0;
+}
+
+.days li {
+  list-style-type: none;
+  display: inline-block;
+  width: 13.6%;
+  text-align: center;
+  margin-bottom: 5px;
+  font-size:12px;
+  color: #000000;
+}
+
+/*style day buttons*/
+.days button {
+    width: 30px;
+    height : 30px;
+    text-align: center;
+    border: none;
+    background-color: #EBE8ED;
+}
+
+/*change formatting when button is selected*/
+.days button:focus {
+    background-color: #655473;
+    color: #FFFFFF;
+}
+
+/* Add media queries for smaller screens */
+@media screen and (max-width:720px) {
+  .weekdays li, .days li {width: 13.1%;}
+}
+
+@media screen and (max-width: 420px) {
+  .weekdays li, .days li {width: 12.5%;}
+  .days li .active {padding: 2px;}
+}
+
+@media screen and (max-width: 290px) {
+  .weekdays li, .days li {width: 12.2%;}
+}
+</style>
+</head>
+<body>
+<div class = "header">
+    <a href = "/">
+        <img src="https://i.ibb.co/FwGkTmY/queen-bitch-logo.png" alt="logo" />
+    </a>
+    <h1>Queen Bitch Tattoo Studio</h1>
+</div>
+<div class="content">
+<h2>Employee Site</h2>
+<h3>Artist Calendars</h3>
+<div class = "month">
+    <p>{{artist}}</p>
+    <p>{{month}} 2021</p>
+</div>
+<ul class="weekdays">
+  <li>Mo</li>
+  <li>Tu</li>
+  <li>We</li>
+  <li>Th</li>
+  <li>Fr</li>
+  <li>Sa</li>
+  <li>Su</li>
+</ul>
+
+<ul class="days">
+    {% for row in shift %}
+    <li>{{row}}</li>
+    {% endfor %}
+    {% for row in days %}
+    <li><button onclick="findBookings(this)" value="{{row}}">{{row}}</button></li>
+    {% endfor %}
+</ul>
+
+<p id="dayBookings"></p>
+
+<!footer>
+<div class = "footer">
+  <div id ="footLeft"><p>Tel: 07525761214</p></div>
+  <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
+  <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
+</div>
+
+<script>
+function findBookings(thisValue) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("dayBookings").innerHTML = this.responseText;
+        }
+    };
+    var day = thisValue.value
+    xhttp.open("GET", "/findBookings?d="+day, true);
+    xhttp.send();
+}
+
+
+</script>
+
+</body>
+</html>
