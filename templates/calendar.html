@@ -1,0 +1,65 @@
+<html>
+<head>
+<link rel="stylesheet" href="static/tattoo.css">
+</head>
+<body>
+<div class = "header">
+    <a href = "/">
+        <img src="https://i.ibb.co/FwGkTmY/queen-bitch-logo.png" alt="logo" />
+    </a>
+    <h1>Queen Bitch Tattoo Studio</h1>
+</div>
+<div class="content">
+<h2>Employee Site</h2>
+<h3>Artist Calendars</h3>
+<form action ="{{url_for('getCalendar') }}" method = "POST">
+<!choose which artist's calendar to view>
+    <div class="row">
+        <div class = "col15">
+            <label for "artists">Artist: </label>
+        </div>
+        <div class = "col85">
+            <select name="artists" id="artists" required>
+                <option value=1>Lana Fern</option>
+                <option value=2>Peggy Brown</option>
+                <option value=3>Jodie Ahnien</option>
+                <option value=4>El Rose</option>
+            </select>
+        </div>
+    </div>
+<!choose which month to view>
+    <div class="row">
+        <div class = "col15">
+            <label for "months">Desired month to book:</label>
+        </div>
+        <div class = "col85">
+            <select name="months" id="months" required>
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
+            </select>
+        </div>
+    </div>
+
+    <input type='submit' value='View calendar'>
+</form>
+
+</div>
+<!footer>
+<div class = "footer">
+  <div id ="footLeft"><p>Tel: 07525761214</p></div>
+  <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
+  <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
+</div>
+
+</body>
+</html>
