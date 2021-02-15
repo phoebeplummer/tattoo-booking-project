@@ -20,7 +20,7 @@ def view():
 def delete():
     conn = sqlite3.connect('queen-bitch-db.db')
     cursor = conn.cursor()
-    cursor.execute("DELETE from tblLogin where username = 'hello'")
+    cursor.execute("DELETE from tblBookings where bookingID = 'eq1981'")
     conn.commit()
     cursor.execute("SELECT * FROM tblLogin")
     result = cursor.fetchall()
@@ -237,7 +237,7 @@ def employeeLogin():
         correctPassword = cursor.fetchone()
 #check username is in system
         if correctPassword == None:
-            msg = "username not found in system"
+            msg = "Unable to login: username not found in system"
             return render_template("/result.html", msg=msg)
 #check given password matches hashed password in database
 #first hash given password and remove salt from stored hashed password
@@ -251,7 +251,7 @@ def employeeLogin():
             if pwdHash == correctPassword:
                 return render_template("/employeeHome.html")
             else:
-                msg = 'username and password do not match'
+                msg = 'Unable to login: username and password do not match'
                 return render_template("/result.html", msg=msg)
 
 
@@ -294,6 +294,52 @@ def addEmployee():
         msg = "New login successfully added"
         return render_template("/result.html", msg=msg)
 
+#check username and password are valid for add new employee
+@app.route('/checkPsw')
+def checkPsw():
+#connect to database
+    conn = sqlite3.connect('queen-bitch-db.db')
+    cursor = conn.cursor()
+#initialise arrays and variables
+    lowercase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    uppercase = ['A', 'B', 'C', 'D', 'E', 'F','G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+    'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    specialChars = ['!', '@', '€', '£', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=',
+    '[', ']', '{', '}', ';', ':', '"', "'", '|', '<', ',', '.', '>', '?', '/']
+    lower = False
+    upper = False
+    num = False
+    special = False
+    msg = ''
+#fetch passwords and username from form
+    password1 = request.args.get('a', '')
+    password2 = request.args.get('b', '')
+    username = request.args.get('c', '')
+#check username is not already in system
+    cursor.execute("SELECT * FROM tblLogin WHERE username =" + "'" + username + "'")
+    rows = cursor.fetchall()
+    if len(rows) > 0:
+        msg = "Username already in system"
+#verify passwords match
+    elif password1 != password2:
+        msg = "Passwords do not match"
+#verify password meets all requirements
+    else:
+        for i in password1:
+            if i in lowercase:
+                lower = True
+            elif i in uppercase:
+                upper = True
+            elif i in numbers:
+                num = True
+            elif i in specialChars:
+                special = True
+        if lower == False or upper == False or num == False or special == False:
+            msg = "Password does not meet entry requirements"
+    return msg
+
 #add confirmed booking
 @app.route('/add-booking', methods =["GET", "POST"])
 def addBooking():
@@ -323,7 +369,7 @@ def addBooking():
         cursor.execute(sqlSearchDate)
         result = cursor.fetchall()
 #return message if booking date is taken
-        if result != None:
+        if result == None:
             msg = "Booking date already taken"
             return render_template("/result.html", msg=msg)
 #if booking date is free update tblBookings
@@ -438,20 +484,23 @@ def changeDate():
         cursor.execute(sqlFindArtist)
         artistNo = (cursor.fetchone()[0])
 #search to find if booking date is already taken
-        sqlSearchDate = "SELECT * FROM tblBookings WHERE bookedDay = " + "'" + aDay + "' AND bookedMonth = " + "'" + aMonth + "' AND bookedTime = " + "'" + aTime + "' AND artistNumber = " + "'" + str(artistNo) + "'"
+        sqlSearchDate = """SELECT * FROM tblBookings WHERE bookedDay = """ + "'" + aDay + "' AND bookedMonth = " + "'" + aMonth + """
+        ' AND bookedTime = """ + "'" + aTime + "' AND artistNumber = " + "'" + str(artistNo) + "'"
         cursor.execute(sqlSearchDate)
         result = cursor.fetchall()
 #return message if booking date is taken
-        if result != None:
+        if result == None:
             msg = "Booking date already taken"
             return render_template("/result.html", msg=msg)
 #if bookig date is free update tblBookings
-        sqlNewDate = "UPDATE tblBookings SET bookedDay = " + "'" + aDay + "', bookedMonth = " + "'" + aMonth + "', bookedTime = " + "'" + aTime + "' WHERE bookingID =" + "'" + anID + "'"
+        sqlNewDate = """UPDATE tblBookings SET bookedDay = """ + "'" + aDay + "', bookedMonth = " + "'" + aMonth + """
+        ', bookedTime = """ + "'" + aTime + "' WHERE bookingID =" + "'" + anID + "'"
         cursor.execute(sqlNewDate)
         conn.commit()
 #return success message
         msg = "Booking date updated"
         return render_template("/result.html", msg=msg)
+
 
 #outstanding estimates
 @app.route('/outstanding-estimates')
@@ -796,4 +845,80 @@ def estimateSent():
     conn.commit()
 #return message to html page to confirm database has been changed
     return "Estimate sent to client"
+
+@app.route('/artist-calendars', methods=["GET", "POST"])
+def getCalendar():
+    if request.method == "GET":
+        return render_template('calendar.html')
+    if request.method == "POST":
+#fetch artist + month from form
+        global artistNum
+        artistNum = int(request.form["artists"])
+        global calMonth
+        calMonth = request.form["months"]
+#initialise array of artist names
+        artists = ["Lana Fern", "Peggy Brown", "Jodie Ahnien", "El Rose"]
+        artistName = artists[(artistNum-1)]
+#find number of days in month and shift
+        thirtyDays = ["april", "june", "september", "november"]
+        if calMonth in thirtyDays:
+            days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+            if calMonth == 'april':
+                shift = ['', '', '']
+                days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+            elif calMonth == 'june':
+                shift = ['']
+            elif calMonth == 'september':
+                shift = ['', '']
+            else:
+                shift = []
+        elif calMonth == 'february':
+            days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]
+            shift = []
+        else:
+            days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+            if calMonth == 'january':
+                shift = ['', '', '', '']
+            elif calMonth == 'march':
+                shift = []
+            elif calMonth == 'may':
+                shift = ['', '', '', '', '']
+            elif calMonth == 'july':
+                shift = ['', '', '']
+            elif calMonth == 'august':
+                shift = ['', '', '', '', '', '']
+            elif calMonth == 'october':
+                shift = ['', '', '', '']
+            else:
+                shift = ['', '']
+        return render_template("/viewCalendar.html", artist=artistName, month=calMonth, days=days, shift=shift )
+
+@app.route('/findBookings')
+def findBookings():
+#connect to database
+    conn = sqlite3.connect('queen-bitch-db.db')
+    cursor = conn.cursor()
+#get variables from html page
+    day = request.args.get('d', '')
+    sqlBookings = "SELECT bookingID, clientNumber, bookedTime FROM tblBookings WHERE artistNumber = " + "'" + str(artistNum) + "'" + """ AND
+    bookedMonth = """ + "'" + calMonth + "'" + "AND bookedDay = " + "'" + str(day) + "'"
+    cursor.execute(sqlBookings)
+    bookings = cursor.fetchall()
+    if len(bookings) == 0:
+        calendar = "Morning: No bookings <br> Afternoon: No bookings"
+        return calendar
+    if len(bookings) == 1:
+        clientNo = bookings[0][1]
+        sqlName = "SELECT firstName, surname FROM tblClients WHERE clientNumber = " + "'" + str(clientNo) + "'"
+        cursor.execute(sqlName)
+        name = cursor.fetchall()
+        if bookings[0][2] == 'morning':
+            calendar = "<b>Morning:</b> Client: " + str(name[0][0]) + " " + str(name[0][1]) + " Booking ID: " + str(bookings[0][0]) + "<br><b>Afternoon:</b> No bookings"
+            return calendar
+        elif bookings[0][2] == 'afternoon':
+            calendar = "<b>Morning:</b> No bookings <br><b>Afternoon:</b> Client: " + str(name[0][0]) + " " + str(name[0][1]) + " Booking ID: " + str(bookings[0][0])
+            return calendar
+        else:
+            calendar = "<b>Morning:</b> Client: " + str(name[0][0]) + " " + str(name[0][1]) + " Booking ID: " + str(bookings[0][0]) + " <br><b>Afternoon:</b> Client: " + str(name[0][0]) + " " + str(name[0][1]) + " Booking ID: " + str(bookings[0][0])
+            return calendar
 
