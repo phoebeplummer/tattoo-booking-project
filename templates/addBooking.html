@@ -49,11 +49,13 @@
                 <label for "bookingID">ID of booking to be added: </label>
             </div>
             <div class='col85'>
-                <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..." required>
+                <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..."
+                onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm bookig ID before you can proceed' : '');"required>
             </div>
         </div>
     </div>
 
+<!field: day>
     <div class="row">
         <div class = "col15">
             <label for "day">Confirmed day:</label>
@@ -95,12 +97,13 @@
         </div>
     </div>
 
+<!field: month>
     <div class="row">
         <div class = "col15">
             <label for "month">Confirmed month:</label>
         </div>
         <div class = "col85">
-            <select name="month" id="month" required>
+            <select name="month" id="month" onblur="checkDate()" required>
                 <option value="january">January</option>
                 <option value="february">February</option>
                 <option value="march">March</option>
@@ -117,6 +120,20 @@
         </div>
     </div>
 
+<!field: year>
+    <div class="row">
+        <div class = "col15">
+            <label for "year">Confirmed year:</label>
+        </div>
+        <div class = "col85">
+            <select name="year" id="year" onblur="datePast()" required>
+                <option value=2021>2021</option>
+                <option value=2022>2022</option>
+            </select>
+        </div>
+    </div>
+
+<!field: session time>
     <div class="row">
         <div class = "col15">
             <label for "sessionTime">Booked time:</label>
@@ -130,9 +147,16 @@
         </div>
     </div>
 
-    <input type="checkbox" id="deposit" name="deposit" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm deposit has been received before booking can be confirmed' : '');" required>
 
-    <p> <input type="submit" value="Submit"> </p>
+<!deposit checkbox>
+    <label class="checkboxContainer">Received deposit?
+        <input type="checkbox" id="deposit" name="deposit" required>
+        <span class="boxCheckmark"></span>
+    </label>
+
+<!submit form>
+    <p> <input type="submit" value="Submit" onclick="checkTick()"> </p>
+
 </form>
 
 </div>
@@ -145,10 +169,14 @@
 </div>
 
 <script>
-  document.getElementById("deposit").setCustomValidity("Must confirm deposit has been received before booking can be confirmed");
-</script>
+//check deposit checkbox is ticked
+function checkTick() {
+    if (document.getElementById("deposit").checked == false) {
+        alert('Must confirm deposit has been received before booking can be confirmed')
+    }
+}
 
-<script>
+//AJAX to find client
 function findClient() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -161,9 +189,8 @@ function findClient() {
     xhttp.open("GET", "/findClient?f="+firstName+"&s="+surname, true);
     xhttp.send();
 }
-</script>
 
-<script>
+//show input field for booking ID
 function displayCheck() {
   var x = document.getElementById("idCheck");
   if (x.style.display === "none") {
@@ -172,7 +199,58 @@ function displayCheck() {
     x.style.display = "block";
   }
 }
-</script>
 
+//check date is within valid range
+function checkDate() {
+    var day = document.getElementById("day").value
+    var month = document.getElementById("month").value
+//check for months with 30 days
+    if (month == "april" || month == "june" || month == "september" || month == "november") {
+        if (day > 30) {
+            alert("Please enter valid date. Day is out of range")
+        }
+    }
+//check for february
+    else if (month == "february") {
+        if (day >28) {
+            alert("Please enter valid date. Day is out of range")
+        }
+    }
+}
+
+//set custom validities
+document.getElementById("bookingID").setCustomValidity('Must confirm booking ID before you can proceed');
+
+//ensure date is not in the past
+function datePast() {
+//get current date and seperate into day, month and year
+    var d = new Date();
+    d = d.toISOString();
+    var currentYear = d.substring(0, 4);
+    var currentMonth = d.substring(5, 7);
+//remove 0 if month is before october
+    if (currentMonth < 10) {
+        currentMonth = d.substring(6,7)
+    }
+    var currentDay = d.substring(8, 10);
+//get day month and year booking is being made for
+    var year = document.getElementById("year").value;
+    var month = document.getElementById("month").value;
+    var monthsArray = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+    var monthNum = monthsArray.indexOf(month);
+    monthNum = monthNum + 1
+    var day = document.getElementById("day").value;
+//send alert if date is in the past
+    if (year < currentYear) {
+        alert("Please enter valid date. Date cannot be in the past");
+    }
+    else if (year == currentYear && monthNum < currentMonth) {
+        alert("Please enter valid date. Date cannot be in the past");
+    }
+    else if (year == currentYear && monthNum == currentMonth && day < currentDay) {
+        alert("Please enter valid date. Date cannot be in the past");
+    }
+}
+</script>
 </body>
 </html>
