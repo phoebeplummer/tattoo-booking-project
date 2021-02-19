@@ -24,6 +24,7 @@ input[type=submit]:not(#estimateButton) {
     color: #FFFFFF;
     top: 270px;
     left: 300px;
+    letter-spacing: 1px;
 }
 
 /*only display estimate info what button is clicked*/
@@ -37,6 +38,8 @@ input[type=submit]:not(#estimateButton) {
     width: 225px;
     height: 50px;
     left: 420px;
+    position: relative;
+    top: 99%;
 }
 
 </style>
@@ -52,12 +55,15 @@ input[type=submit]:not(#estimateButton) {
 <h2>Employee site</h2>
 <h3>Outstanding Estimates</h3>
 
+
+<!print booking IDs from flask app as buttons>
     {% for row in rows %}
     <input type="submit" onclick="findEstimateInfo(this); saveVar(this); displayEstimate()" value="{{row[0]}}">
     <br><br><br>
     {% endfor %}
 
 
+<!estimate info and confirm sent button>
 <div id ="estimate">
 
     <p id="estimateInfo"></p>
@@ -78,13 +84,14 @@ input[type=submit]:not(#estimateButton) {
 </div>
 
 <script>
-
+//save booking ID as a variable so it can be passed to flask app
 var bookingID = ""
 
 function saveVar(b) {
     bookingID = b.value
 }
 
+//AJAX function to find estimate info
 function findEstimateInfo(thisValue) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -97,7 +104,7 @@ function findEstimateInfo(thisValue) {
     xhttp.send();
 }
 
-
+//AJAX function to change confirmedEstimate to Y
 function estimateSent(bookID) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -109,6 +116,7 @@ function estimateSent(bookID) {
     xhttp.send();
 }
 
+//display estimate info when booking ID is clicked
 function displayEstimate() {
   var x = document.getElementById("estimate");
   if (x.style.display === "none") {
@@ -118,6 +126,5 @@ function displayEstimate() {
   }
 }
 </script>
-
 </body>
 </html>
