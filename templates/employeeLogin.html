@@ -18,7 +18,8 @@
             <label for "username">Username: </label>
         </div>
         <div class='col85'>
-            <input type="text" name="username" id="username" required>
+            <input type="text" name="username" id="username"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter username before you can proceed' : '');" required>
         </div>
     </div>
     <div class="row">
@@ -26,7 +27,8 @@
             <label for "password">Password: </label>
         </div>
         <div class='col85'>
-            <input type="password" name="password" id="password" required>
+            <input type="password" name="password" id="password"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter password before you can proceed' : '');" required>
         </div>
     </div>
 
@@ -49,6 +51,10 @@ function showPassword() {
     x.type = "password";
   }
 }
+
+//set custom validities
+document.getElementById("username").setCustomValidity('Please enter username before you can proceed');
+document.getElementById("password").setCustomValidity('Please enter password before you can proceed');
 </script>
 
 </form>
