@@ -6,9 +6,11 @@
     box-sizing: border-box;
 }
 
+/*STYLE ARTISTS CALENDAR*/
 ul {
     list-style-type: none;
 }
+
 
 /* style month title */
 .month {
@@ -81,6 +83,42 @@ ul {
 @media screen and (max-width: 290px) {
   .weekdays li, .days li {width: 12.2%;}
 }
+
+/*style modal box*/
+.modal {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #C3C1C4;
+    color: #221A2A;
+    padding: 10px;
+    width: 400px;
+    border: 2px solid #221A2A;
+    z-index: 100;
+    display: none;
+}
+
+#dayBookings h4{
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+#dayBookings :not(h4) {
+    text-indent: 10px;
+    letter-spacing: 2px;
+}
+
+/*style X*/
+.closeButton {
+  float: right;
+  width: 15px;
+  line-height: 15px;
+  text-align: center;
+  cursor: pointer;
+  color: #221A2A;
+}
 </style>
 </head>
 <body>
@@ -95,8 +133,9 @@ ul {
 <h3>Artist Calendars</h3>
 <div class = "month">
     <p>{{artist}}</p>
-    <p>{{month}} 2021</p>
+    <p>{{month}} {{year}}</p>
 </div>
+
 <ul class="weekdays">
   <li>Mo</li>
   <li>Tu</li>
@@ -112,11 +151,15 @@ ul {
     <li>{{row}}</li>
     {% endfor %}
     {% for row in days %}
-    <li><button onclick="findBookings(this)" value="{{row}}">{{row}}</button></li>
+    <li><button onclick="findBookings(this); displayModal();" value="{{row}}">{{row}}</button></li>
     {% endfor %}
 </ul>
 
-<p id="dayBookings"></p>
+<div class = "modal">
+    <span class="closeButton" onclick="hideModal()">X</span>
+    <p id="dayBookings"></p>
+</div>
+
 
 <!footer>
 <div class = "footer">
@@ -138,8 +181,19 @@ function findBookings(thisValue) {
     xhttp.send();
 }
 
+function displayModal() {
+    var modalElems = document.getElementsByClassName('modal');
+    for (var i=0;i<modalElems.length;i+=1){
+        modalElems[i].style.display = 'block';
+    }
+}
 
+function hideModal() {
+    var modalElems = document.getElementsByClassName('modal');
+    for (var i=0;i<modalElems.length;i+=1){
+        modalElems[i].style.display = 'none';
+    }
+}
 </script>
-
 </body>
 </html>
