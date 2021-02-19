@@ -57,7 +57,7 @@ input, select, textarea {
         If you did not make a note of this, it will have also been sent to you via email when you booked your last tattoo.</p>
         <p id="verifyClient"></p>
         <label class="radioContainer">Yes
-            <input type="radio" id="clientYes" name="clientVerify" value="yes" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm client number before booking can be requested' : '');" >
+            <input type="radio" id="clientYes" name="clientVerify" value="yes" onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm client number before booking can be requested' : '');" required >
             <span class="radioCheckmark"></span>
         </label>
         <label class="radioContainer">No
@@ -97,7 +97,7 @@ input, select, textarea {
             <label for "placement">Placement: </label>
         </div>
         <div class = "col85">
-            <input type="text" id="placement" name="placement" placeholder="Your tattoo placement here..." required>
+            <input type="text" id="placement" name="placement" placeholder="Your tattoo placement here..." onblur="allLetters(this)" required>
         </div>
     </div>
 
@@ -189,48 +189,21 @@ function displayCheck() {
   }
 }
 
-//validate first name and last name
-function allLetters(thisValue) {
-    var valid = /^[A-Za-z]+$/
-    if (thisValue.value.match(valid)) {
-        var valid = "y";
-    }
-    else {
-        alert("Please enter name in valid format. Name may contain letters only.");
-    }
-}
-
-//validate phone number
-function validatePhone() {
-    var phone = document.getElementById('phone')
-    var valid = /^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/
-    if (phone.value.match(valid)) {
-        var valid = "y";
-    }
-    else {
-        alert("Please enter a valid phone number. Phone number must start with 07 or +447 followed by 9 digits.");
-    }
-}
-
-//validate email
-function validateEmail() {
-    var email = document.getElementById('email')
-    var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (email.value.match(valid)) {
-        var valid = "y";
-    }
-    else {
-        alert("Please enter a email in valid format.");
-    }
-}
-
 //validate decsription
 function validateDesc(thisValue) {
     if (thisValue.value.length > 800) {
         alert('Description must be less than 800 characters.')
     }
 }
-</script>
 
+//set custom validity messages
+document.getElementById("description").setCustomValidity('Please enter description before you can proceed');
+
+document.getElementById("placement").setCustomValidity('Please enter placement before you can proceed');
+
+document.getElementById("sizeWidth").setCustomValidity('Please enter width before you can proceed');
+
+document.getElementById("sizeLength").setCustomValidity('Must enter length before you can proceed');
+</script>
 </body>
 </html>
