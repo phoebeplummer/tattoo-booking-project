@@ -1,6 +1,13 @@
 <html>
 <head>
 <link rel="stylesheet" href="static/tattoo.css">
+<style>
+#pswCheck {
+    font-size: 18px;
+    color: #FF0000;
+    margin-left: 20px;
+}
+</style>
 </head>
 <body>
 <!header>
@@ -22,7 +29,8 @@
             <label for "username">Username: </label>
         </div>
         <div class='col85'>
-            <input type="text" name="username" id="username" required>
+            <input type="text" name="username" id="username"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter username before you can proceed' : '');" required>
         </div>
     </div>
 
@@ -32,7 +40,8 @@
             <label for "password">Password: </label>
         </div>
         <div class='col85'>
-            <input type="password" name="password1" id="password1" onfocus="showMsg()" onblur="hideMsg()" required>
+            <input type="password" name="password1" id="password1" onfocus="showMsg()" onblur="hideMsg()"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter password before you can proceed' : '');"required>
         </div>
     </div>
 
@@ -42,7 +51,8 @@
             <label for "password">Re-enter password: </label>
         </div>
         <div class='col85'>
-            <input type="password" name="password2" id="password2" onfocus="showMsg()" onblur="hideMsg()" required>
+            <input type="password" name="password2" id="password2" onfocus="showMsg()" onblur="checkPsw()"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please re-enter password before you can proceed' : '');" required>
         </div>
     </div>
 
@@ -55,7 +65,9 @@
 
     <br>
 
-    <input type ="submit" value="Submit">
+    <p id = "pswCheck"></p>
+
+    <p> <input type ="submit" value="Submit"> </p>
 
     </form>
 
@@ -169,6 +181,26 @@ pswInput.onkeyup = function() {
         specialChar.classList.add("invalid");
     }
 }
+
+//check password and username meet requirements
+function checkPsw() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("pswCheck").innerHTML = this.responseText;
+        }
+    };
+    var firstName = document.getElementById("password1").value
+    var surname = document.getElementById("password2").value
+    var username = document.getElementById("username").value
+    xhttp.open("GET", "/checkPsw?a="+firstName+"&b="+surname+"&c="+username, true);
+    xhttp.send();
+}
+
+//set custom validities
+document.getElementById("username").setCustomValidity('Please enter username before you can proceed');
+document.getElementById("password1").setCustomValidity('Please enter password before you can proceed');
+document.getElementById("password2").setCustomValidity('Please re-enter password before you can proceed');
 
 
 </script>
