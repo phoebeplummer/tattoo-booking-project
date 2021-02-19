@@ -48,7 +48,8 @@ input, select, textarea {
             <label for "firstName">First name: </label>
         </div>
         <div class='col85'>
-            <input type="text" id="firstName" name="firstName" placeholder="Your first name..." onblur="allLetters(this)" required>
+            <input type="text" id="firstName" name="firstName" placeholder="Your first name..." onblur="allLetters(this)"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter first name before you can proceed' : '');"required>
         </div>
     </div>
 
@@ -58,7 +59,8 @@ input, select, textarea {
             <label for "surname">Surname: </label>
         </div>
         <div class='col85'>
-            <input type="text" id= "surname" name="surname" placeholder="Your surname here..." onblur="allLetters(this)" required>
+            <input type="text" id= "surname" name="surname" placeholder="Your surname here..." onblur="allLetters(this)"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter surname before you can proceed' : '');" required>
         </div>
     </div>
 
@@ -69,7 +71,8 @@ input, select, textarea {
             <label for "email">Email address: </label>
         </div>
         <div class='col85'>
-            <input type="text" id="email" name="email" placeholder="Your email here..." onblur="validateEmail()" required>
+            <input type="text" id="email" name="email" placeholder="Your email here..." onblur="validateEmail()"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter email before you can proceed' : '');"required>
         </div>
     </div>
 
@@ -80,7 +83,8 @@ input, select, textarea {
             <label for "phone">Phone number: </label>
         </div>
         <div class='col85'>
-            <input type="text" id="phone" name="phone" placeholder="Your phone number here..." onblur="validatePhone()" required>
+            <input type="text" id="phone" name="phone" placeholder="Your phone number here..." onblur="validatePhone()"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter phone number before you can proceed' : '');"required>
         </div>
     </div>
 
@@ -106,7 +110,8 @@ input, select, textarea {
             <label for "description">Description: </label>
         </div>
         <div class = "col85" id="description">
-            <input type="text" id="description" name="description" placeholder="Your tattoo description here..." onblur="validateDesc(this)" required>
+            <input type="text" id="description" name="description" placeholder="Your tattoo description here..." onblur="validateDesc(this)"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter description before you can proceed' : '');" required>
         </div>
     </div>
 
@@ -117,7 +122,8 @@ input, select, textarea {
             <label for "placement">Placement: </label>
         </div>
         <div class = "col85">
-            <input type="text" id="placement" name="placement" placeholder="Your tattoo placement here..." required>
+            <input type="text" id="placement" name="placement" placeholder="Your tattoo placement here..." onblur="validatePlace(this)"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter placement before you can proceed' : '');"required>
         </div>
     </div>
 <!field: width>
@@ -126,7 +132,9 @@ input, select, textarea {
             <label for "sizeWidth">Width of tattoo (cm): </label>
         </div>
         <div class = "col85">
-            <input type="number" step =0.5 min=0 max=100 id="sizeWidth" name="sizeWidth" placeholder="Your approximate tattoo width here..." required>
+            <input type="number" step =0.5 min=0 max=100 id="sizeWidth" name="sizeWidth" placeholder="Your approximate tattoo width here..."
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter width before you can proceed' : '');"
+            onchange="this.setCustomValidity(validity.rangeOverflow ? 'Width exceeds maximum limit. Please enter a width less than 100' : '');" required>
         </div>
     </div>
 <!field: length>
@@ -135,7 +143,9 @@ input, select, textarea {
             <label for "sizeLength">Length of tattoo (cm): </label>
         </div>
         <div class = "col85">
-            <input type="number" step =0.5 min= 0 max=100 id="sizeLength" name="sizeLength" placeholder="Your approximate tattoo length here..." required>
+            <input type="number" step =0.5 min= 0 max=100 id="sizeLength" name="sizeLength" placeholder="Your approximate tattoo length here..."
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter length before you can proceed' : '');"
+            onchange="this.setCustomValidity(validity.rangeOverflow ? 'Length exceeds maximum limit. Please enter a length less than 100' : '');" required>
         </div>
     </div>
 <!field: month>
@@ -223,10 +233,38 @@ function validateEmail() {
 //validate decsription
 function validateDesc(thisValue) {
     if (thisValue.value.length > 800) {
-        alert('Description must be less than 800 characters.')
+        alert('Please enter valid description. Description must be less than 800 characters.')
     }
 }
+
+function validatePlace(thisValue) {
+    var valid = /^[A-Za-z ]+$/
+    if (thisValue.value.match(valid)) {
+        var valid = "y";
+    }
+    else {
+        alert("Please enter placement in valid format. Placement may contain letters only.");
+    }
+}
+
+//set custom validity messages
+document.getElementById("firstName").setCustomValidity('Please enter first name before you can proceed');
+
+document.getElementById("surname").setCustomValidity('Please enter surname before you can proceed');
+
+document.getElementById("email").setCustomValidity('Please enter email before you can proceed');
+
+document.getElementById("phone").setCustomValidity('Please enter phone number before you can proceed');
+
+
+document.getElementById("description").setCustomValidity('Please enter description before you can proceed');
+
+document.getElementById("placement").setCustomValidity('Please enter placement before you can proceed');
+
+document.getElementById("sizeWidth").setCustomValidity('Please enter width before you can proceed');
+
+document.getElementById("sizeLength").setCustomValidity('Must enter length before you can proceed');
+
 </script>
 </body>
 </html>
-
