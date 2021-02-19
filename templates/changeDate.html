@@ -25,7 +25,8 @@
             <label for "firstName">Client first name: </label>
         </div>
         <div class='col85'>
-            <input type="text" id="firstName" name="firstName" placeholder="Client first name..." required>
+            <input type="text" id="firstName" name="firstName" placeholder="Client first name..."
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter first name before you can proceed' : '');" required>
         </div>
     </div>
     <div class="row">
@@ -33,7 +34,8 @@
             <label for "surname">Client surname: </label>
         </div>
         <div class='col85'>
-            <input type="text" id= "surname" name="surname" placeholder="Client surname here..." required>
+            <input type="text" id= "surname" name="surname" placeholder="Client surname here..."
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter surname before you can proceed' : '');" required>
         </div>
     </div>
     <br>
@@ -50,11 +52,13 @@
                 <label for "bookingID">ID of booking to be editted: </label>
             </div>
             <div class='col85'>
-                <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..." required>
+                <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..."
+                onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm booking ID before you can proceed' : '');" required>
             </div>
         </div>
     </div>
 
+<!field: day>
     <div class="row">
         <div class = "col15">
             <label for "day">New day:</label>
@@ -96,12 +100,13 @@
         </div>
     </div>
 
+<!field: month>
     <div class="row">
         <div class = "col15">
             <label for "month">New month:</label>
         </div>
         <div class = "col85">
-            <select name="month" id="month" required>
+            <select name="month" id="month" onblur="checkDate()" required>
                 <option value="january">January</option>
                 <option value="february">February</option>
                 <option value="march">March</option>
@@ -114,6 +119,19 @@
                 <option value="october">October</option>
                 <option value="november">November</option>
                 <option value="december">December</option>
+            </select>
+        </div>
+    </div>
+
+<!field: year>
+    <div class="row">
+        <div class = "col15">
+            <label for "year">New year:</label>
+        </div>
+        <div class = "col85">
+            <select name="year" id="year" onblur="datePast()" required>
+                <option value=2021>2021</option>
+                <option value=2022>2022</option>
             </select>
         </div>
     </div>
@@ -160,6 +178,62 @@ function displayCheck() {
   } else {
     x.style.display = "block";
   }
+}
+
+//set custom validities
+document.getElementById("firstName").setCustomValidity('Please enter first name before you can proceed');
+
+document.getElementById("surname").setCustomValidity('Please enter surname before you can proceed');
+
+document.getElementById("bookingID").setCustomValidity('Must confirm booking ID before you can proceed');
+
+//check date is within valid range
+function checkDate() {
+    var day = document.getElementById("day").value
+    var month = document.getElementById("month").value
+//check for months with 30 days
+    if (month == "april" || month == "june" || month == "september" || month == "november") {
+        if (day > 30) {
+            alert("Please enter valid date. Day is out of range")
+        }
+    }
+//check for february
+    else if (month == "february") {
+        if (day >28) {
+            alert("Please enter valid date. Day is out of range")
+        }
+    }
+}
+
+//ensure date is not in the past
+function datePast() {
+//get current date and seperate into day, month and year
+    var d = new Date();
+    d = d.toISOString();
+    var currentYear = d.substring(0, 4);
+    var currentMonth = d.substring(5, 7);
+//remove 0 if month is before october
+    if (currentMonth < 10) {
+        currentMonth = d.substring(6,7)
+    }
+    var currentDay = d.substring(8, 10);
+//get day month and year booking is being made for
+    var year = document.getElementById("year").value;
+    var month = document.getElementById("month").value;
+    var monthsArray = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+    var monthNum = monthsArray.indexOf(month);
+    monthNum = monthNum + 1
+    var day = document.getElementById("day").value;
+//send alert if date is in the past
+    if (year < currentYear) {
+        alert("Please enter valid date. Date cannot be in the past");
+    }
+    else if (year == currentYear && monthNum < currentMonth) {
+        alert("Please enter valid date. Date cannot be in the past");
+    }
+    else if (year == currentYear && monthNum == currentMonth && day < currentDay) {
+        alert("Please enter valid date. Date cannot be in the past");
+    }
 }
 
 </script>
