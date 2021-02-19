@@ -228,6 +228,8 @@ input[type=submit]:hover {
   background-color: #221A2A;
 }
 
+
+
 /* Create checkmark */
 .boxCheckmark:after {
   content: "";
@@ -240,6 +242,8 @@ input[type=submit]:hover {
   display: block;
 }
 
+
+
 /* Style the checkmark */
 .checkboxContainer .boxCheckmark:after {
   left: 5px;
@@ -250,6 +254,8 @@ input[type=submit]:hover {
   border-width: 0 3px 3px 0;
   transform: rotate(45deg);
 }
+
+
 
 * {
   box-sizing: border-box;
