@@ -2,6 +2,12 @@
 <head>
 <link rel="stylesheet" href="static/tattoo.css">
 </head>
+<style>
+input[type=submit] {
+    font-size: 15px;
+    width: 120px;
+}
+</style>
 <body>
 <div class = "header">
     <a href = "/">
@@ -30,7 +36,7 @@
 <!choose which month to view>
     <div class="row">
         <div class = "col15">
-            <label for "months">Desired month to book:</label>
+            <label for "months">Month:</label>
         </div>
         <div class = "col85">
             <select name="months" id="months" required>
@@ -50,6 +56,19 @@
         </div>
     </div>
 
+<!choose which year to view>
+    <div class="row">
+        <div class = "col15">
+            <label for "year">Year:</label>
+        </div>
+        <div class = "col85">
+            <select name="year" id="year" required>
+                <option value=2021>2021</option>
+                <option value=2022>2022</option>
+            </select>
+        </div>
+    </div>
+
     <input type='submit' value='View calendar'>
 </form>
 
@@ -60,6 +79,5 @@
   <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
   <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
 </div>
-
 </body>
 </html>
