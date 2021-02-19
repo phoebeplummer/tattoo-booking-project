@@ -50,7 +50,8 @@
                 <label for "bookingID">ID of booking to be editted: </label>
             </div>
             <div class='col85'>
-                <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..." required>
+                <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..."
+                onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm booking ID before you can proceed' : '');" required>
             </div>
         </div>
     </div>
@@ -80,7 +81,8 @@
             <label for "new">New entry: </label>
         </div>
         <div class='col85'>
-            <input type="text" name="new" id="new" placeholder="New entry here..." onblur="validateEntry()" required>
+            <input type="text" name="new" id="new" placeholder="New entry here..." onblur="validateEntry()"
+            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter new entry before you can proceed' : '');"required>
         </div>
     </div>
 
@@ -94,6 +96,7 @@
   <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
   <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
 </div>
+
 <script>
 function findClient() {
     var xhttp = new XMLHttpRequest();
@@ -147,13 +150,32 @@ function validateEntry() {
         }
     }
 //if field editted is length or width of tattoo
-    else if (field.value == "sizeWidth" || field == "sizeLength" ) {
-        if (entry.value > 100 || entry.value < 0.5) {
-            alert ("Please enter valid measurement. Must be greater than 0.5 and less than 100")
+    else if (field.value == "sizeWidth" || field.value == "sizeLength" ) {
+        var valid = /^[0-9]+$/
+        if (entry.value.match(valid)) {
+            if (entry.value > 100 || entry.value < 0.5) {
+                alert ("Please enter valid measurement. Must be greater than 0 and less than 100");
+            }
+        }
+        else {
+            alert ("Please enter valid measurement. Must be a number");
+        }
+    }
+    else if (field.value == "placement") {
+        var valid = /^[A-Za-z ]+$/
+        if (entry.value.match(valid)) {
+            var valid = "y";
+        }
+        else {
+            alert("Please enter placement in valid format. Placement may contain letters only.");
         }
     }
 }
-</script>
+//set custom validity messages
+document.getElementById("new").setCustomValidity('Please enter new entry before you can proceed');
 
+document.getElementById("bookingID").setCustomValidity('Must confirm booking ID before you can proceed');
+
+</script>
 </body>
 </html>
