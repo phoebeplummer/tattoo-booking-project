@@ -29,6 +29,13 @@ body {
     }
 }
 
+@media screen and (max-width: 461px) {
+    .content {
+        padding-top: 320px;
+        padding-bottom: 80px;
+    }
+}
+
 /*FORMAT HEADER*/
 .header {
     background-color: #221A2A;
@@ -167,6 +174,20 @@ input[type=submit]:hover {
   cursor: pointer;
 }
 
+/*FORMAT EMPLOYEE HOME BUTTON*/
+#employeeHomeButton {
+    background-color: #655473;
+    font-size: 12px;
+    text-align: center;
+    width: 120px;
+    height: 40px;
+    border-radius: 30%;
+    border: 2px solid #221A2A;
+    color: #FFFFFF;
+    position: relative;
+    bottom: 50px;
+    left: 88%;
+}
 
 /*FORMAT FIND BUTTONS*/
 #findButton {
@@ -329,36 +350,33 @@ input:focus {
     text-align: justify;
 }
 
+
 /*FORMAT NAVIGATION BUTTONS ON HOMEPAGE*/
 #requestButton, #loginButton {
     background-color: #655473;
     border: 2px solid #221A2A;
     border-radius: 30%;
     color: #FFFFFF;
-    height: 60px;
-    width: 120px;
+    height: 80px;
+    width: 150px;
     text-align: center;
-    font-size: 12px;
+    font-size: 18px;
     text-decoration: none;
     font-family: "bodoni", "georgia", serif
+}
+
+
+#requestButton {
+    position: relative;
+}
+
+#loginButton {
+    position: relative;
 }
 
 #requestButton:hover, #loginButton:hover {
     box-shadow: 0 15px 20px 0 rgba(0,0,0,0.24), 0 20px 50px 0 rgba(0,0,0,0.24);
     cursor: pointer;
-}
-
-
-#requestButton {
-    float: left;
-    margin-left: 25%;
-    margin-bottom: 90px;
-}
-
-#loginButton {
-    float: right;
-    margin-right: 25%;
-    margin-bottom: 90px;
 }
 
 /*clear hyperlink formatting*/
@@ -380,6 +398,59 @@ input:focus {
 #requestA:active, #loginA:active{
     text-decoration: none;
     color: #FFFFFF
+}
+
+/*FORMAT CLIENT HOME PAGE*/
+/*style photo overlay*/
+.overlay {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  top: 0px;
+  background: rgba(101, 84, 115, 0.5);
+  color: #FFFFFF;
+  width: 100%;
+  transition: .5s ease;
+  opacity:0;
+}
+
+/*style artist name*/
+.overlay h3 {
+  color: #FFFFFF;
+  font-size: 40px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/*make overlay appear on hover*/
+.container:hover .overlay {
+  opacity: 1;
+}
+
+/*change number of photos in row depending on width of screen*/
+.container {
+  position: relative;
+  width: 25%;
+  float: left;
+  padding: 10px;
+}
+
+@media screen and (max-width: 1200px) {
+    .container {
+        width: 50%;
+        float: left;
+        padding: 10px;
+    }
+}
+
+@media screen and (max-width: 690px) {
+    .container {
+        width: 100%;
+    }
 }
 
 /*FORMAT NAVIGATION BUTTONS ON EMPLOYEE HOMEPAGE*/
@@ -451,3 +522,268 @@ input:focus {
   left: -35px;
   content: "✖";
 }
+
+/*style password check message*/
+#pswCheck {
+    font-size: 18px;
+    color: #FF0000;
+    margin-left: 20px;
+}
+
+/*STYLE PRINT BUTTON*/
+#printButton {
+    position: absolute;
+    float: right;
+    right: 5%;
+    margin-top: 15px;
+    background-color: #655473;
+    font-size: 14px;
+    text-align: center;
+    width: 80px;
+    height: 30px;
+    border-radius: 30%;
+    border: 2px solid #221A2A;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+/*STYLE ARTISTS CALENDAR*/
+ul {
+    list-style-type: none;
+}
+
+
+/* style month title */
+.month {
+  padding: 70px 25px;
+  width: 100%;
+  background: #655473;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/*style weekdays*/
+.weekdays {
+  margin: 0;
+  padding: 10px 0;
+  background-color: #C3C1C4;
+}
+
+.weekdays li {
+  display: inline-block;
+  width: 13.6%;
+  color: #000000;
+  text-align: center;
+}
+
+/*style days*/
+.days {
+  padding: 10px 0;
+  background: #EBE8ED;
+  margin: 0;
+}
+
+.days li {
+  list-style-type: none;
+  display: inline-block;
+  width: 13.6%;
+  text-align: center;
+  margin-bottom: 5px;
+  font-size:12px;
+  color: #000000;
+}
+
+/*style day buttons*/
+.days button {
+    width: 30px;
+    height : 30px;
+    text-align: center;
+    border: none;
+    background-color: #EBE8ED;
+}
+
+/*change formatting when button is selected*/
+.days button:focus {
+    background-color: #655473;
+    color: #FFFFFF;
+}
+
+/* Add media queries for smaller screens */
+@media screen and (max-width:720px) {
+  .weekdays li, .days li {width: 13.1%;}
+}
+
+@media screen and (max-width: 420px) {
+  .weekdays li, .days li {width: 12.5%;}
+  .days li .active {padding: 2px;}
+}
+
+@media screen and (max-width: 290px) {
+  .weekdays li, .days li {width: 12.2%;}
+}
+
+/*style modal box*/
+.modal {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #C3C1C4;
+    color: #221A2A;
+    padding: 10px;
+    width: 400px;
+    border: 2px solid #221A2A;
+    z-index: 100;
+    display: none;
+}
+
+#dayBookings h4{
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+#dayBookings :not(h4) {
+    text-indent: 10px;
+    letter-spacing: 2px;
+}
+
+/*style X*/
+.closeButton {
+  float: right;
+  width: 15px;
+  line-height: 15px;
+  text-align: center;
+  cursor: pointer;
+  color: #221A2A;
+}
+
+/*STYLE OUTSTANDING ESTIMATES PAGE*/
+/*style client estimate information*/
+#estimateInfo {
+    float: right;
+    margin-right: 15%;
+    width: 280px;
+    padding: 10px;
+    position: absolute;
+    margin-left: 50px;
+    background-color: #655473;
+    border: 2px solid #221A2A;
+    color: #FFFFFF;
+    top: 270px;
+    left: 300px;
+    letter-spacing: 2px;
+}
+
+@media screen and (max-width: 630px) {
+    #estimateInfo {
+        left: 180px;
+    }
+}
+
+/*only display estimate info what button is clicked*/
+#estimate{
+    display: none;
+}
+
+/*format confirm estimate sent button*/
+#estimateButton {
+    font-size: 14px;
+    width: 225px;
+    height: 50px;
+    left: 840px;
+    position: absolute;
+    top: 285px;
+}
+
+/*style estimate confirmed message*/
+#confirmSent {
+    font-size: 18;
+    position: absolute;
+    left: 820px;
+    top: 340px;
+}
+
+/*media queries for different screen widths*/
+@media screen and (max-width: 1008px) {
+    #estimateButton {
+        left: 700px;
+    }
+}
+
+@media screen and (max-width: 872px) {
+    #estimateButton {
+        position: relative;
+        left: 420px;
+        top: 0;
+    }
+}
+
+/*format print button*/
+#printButton {
+    position: absolute;
+    float: right;
+    right: 5%;
+    margin-top: 15px;
+    background-color: #655473;
+    font-size: 14px;
+    text-align: center;
+    width: 80px;
+    height: 30px;
+    border-radius: 30%;
+    border: 2px solid #221A2A;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+/* make page printable */
+@media print {
+/*hide irrelevant content*/
+    .header, #estimateButton, #confirmSent, .footer, h2, h3, #printButton, #employeeHomeButton {
+        display: none;
+    }
+/*restyle list of IDs to suit print page*/
+    #outstandingIDs {
+        float: none;
+        left: 1px;
+        width: 100%;
+        position: fixed;
+        font-size: 20px;
+        top: 5px;
+    }
+/*remove borders of buttons so IDs appear as list*/
+    input[type=submit]:not(#estimateButton) {
+        border: none;
+        float: none;
+        width: 30%;
+        color: #000000;
+    }
+/*reposition estimate info of selected booking*/
+    #estimateInfo {
+        float: none;
+        position: fixed;
+        right: 5px;
+        top: 5px;
+        color: #000000;
+    }
+}
+
+/*CLIENT AND BOOKING DIRECTORY PAGE STYLING*/
+/*style client and booking estimate information boxes*/
+#clientInfo, #bookingInfo {
+    width: 420px;
+    padding: 10px;
+    position: relative;
+    margin-left: 50px;
+    background-color: #655473;
+    border: 2px solid #221A2A;
+    color: #FFFFFF;
+    letter-spacing: 2px;
+    left: 50%;
+    margin-left: -210px;
+    display: none;
+}
+
