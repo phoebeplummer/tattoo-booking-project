@@ -21,13 +21,21 @@ def view():
 def delete():
     conn = sqlite3.connect('queen-bitch-db.db')
     cursor = conn.cursor()
-    for i in range (1, 244):
-        cursor.execute("UPDATE tblBookings SET bookedYear = 2021 WHERE clientNumber =" + str(i))
-        conn.commit()
+    cursor.execute("DELETE FROM tblBookings WHERE clientNumber = 234")
+    conn.commit()
     cursor.execute("SELECT * FROM tblBookings")
     result = cursor.fetchall()
     return ','.join(map(str, result))
 
+@app.route('/index')
+def index():
+    conn = sqlite3.connect('queen-bitch-db.db')
+    cursor = conn.cursor()
+    cursor.execute("CREATE INDEX 'name' ON tblClients (firstName, surname)")
+    conn.commit()
+    cursor.execute("CREATE UNIQUE INDEX 'bookingID' ON tblBookings (bookingID)")
+    conn.commit()
+    return "completed"
 
 #booking request for new clients
 @app.route('/booking-request', methods = ["GET", "POST"])
@@ -38,7 +46,7 @@ def requestBookingNew():
     if request.method == 'GET':
        return render_template('bookingForm.html')
     if request.method == 'POST':
-#add client details to tblClients
+#fetch from form and add client details to tblClients
         clientDetails = []
         aFirstName = request.form['firstName']
         clientDetails.append(aFirstName)
@@ -51,9 +59,6 @@ def requestBookingNew():
         sqltblClients = "INSERT INTO tblClients (firstName, surname, email, phone) VALUES (?, ?, ?, ?)"
         cursor.execute(sqltblClients, clientDetails)
         conn.commit()
-        msg = "client added"
-
-
 #add booking details to tblBookings
         bookingDetails = []
 #first create unique bookingID
@@ -62,11 +67,13 @@ def requestBookingNew():
         cursor.execute(sqlClientNo)
         clientNo = (cursor.fetchone()[0])
         bookingId = aFirstName[0] + aSurname[0] + str(clientNo) + str(aArtist)
+#check that ID is not already in database
         sqlCheckID = "SELECT * FROM tblBookings WHERE bookingID = " +"'" + bookingId + "'"
         cursor.execute(sqlCheckID)
         checkID = cursor.fetchall()
+#change booking ID until it is unique
+        i = 1
         while len(checkID) != 0:
-            i = 1
             bookingId = bookingId + str(i)
             sqlCheckID = "SELECT * FROM tblBookings WHERE bookingID = " +"'" + bookingId + "'"
             cursor.execute(sqlCheckID)
@@ -92,7 +99,9 @@ def requestBookingNew():
         estimate = round(estimate)
         bookingDetails.append(estimate)
 #work out deposit to add to tblBookings
-        if estimate<100:
+        if estimate <20:
+            deposit = 0
+        elif estimate<100:
             deposit = 20
         elif estimate>=100 and estimate<200:
             deposit = 50
@@ -136,7 +145,7 @@ def requestBookingNew():
             msg = 'the following error occured: ()'.format(sqlite3.Error)
 
         finally:
-            return render_template("/result.html", msg=msg)
+            return render_template("/requestResult.html", msg=msg)
 
 
 #booking request for returning clients
@@ -158,16 +167,17 @@ def requestBookingReturning():
         cursor.execute(sqlClientNo)
         clientNo = (cursor.fetchone()[0])
         bookingId = aFirstName[0] + aSurname[0] + str(clientNo) + str(aArtist)
+#check booking ID is not already in databse
         sqlCheckID = "SELECT * FROM tblBookings WHERE bookingID = " +"'" + bookingId + "'"
         cursor.execute(sqlCheckID)
         checkID = cursor.fetchall()
+#change booking ID until it is unique
+        i = 1
         while len(checkID) != 0:
-            i = 1
             bookingId = bookingId + str(i)
             sqlCheckID = "SELECT * FROM tblBookings WHERE bookingID = " +"'" + bookingId + "'"
             cursor.execute(sqlCheckID)
             checkID = cursor.fetchall()
-            bookingDetails.append(bookingId)
             i = i + 1
         bookingDetails.append(bookingId)
 #can then add rest of info from form
@@ -189,7 +199,9 @@ def requestBookingReturning():
         estimate = round(estimate)
         bookingDetails.append(estimate)
 #work out deposit to add to tblBookings
-        if estimate<100:
+        if estimate <20:
+            deposit = 0
+        elif estimate<100:
             deposit = 20
         elif estimate>=100 and estimate<200:
             deposit = 50
@@ -221,13 +233,13 @@ def requestBookingReturning():
 #if month is still to come in 2021
         else:
             desiredYear = 2021
-        bookingDetails.append(desiredYear)
+        bookingDetails.append(str(desiredYear))
 #add details to tblBookings
-        sqltblBookings = "INSERT INTO tblBookings (bookingID, clientNumber, artistNumber, description, placement, sizeWidth, sizeLength, estimate, deposit, sessionLength, desiredMonth, receivedEstimate, confirmedBooking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        sqltblBookings = "INSERT INTO tblBookings (bookingID, clientNumber, artistNumber, description, placement, sizeWidth, sizeLength, estimate, deposit, sessionLength, desiredMonth, receivedEstimate, confirmedBooking, desiredYear) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(sqltblBookings, bookingDetails)
         conn.commit()
         msg = "Booking successfully requested"
-        return render_template("/result.html", msg=msg)
+        return render_template("/requestResult.html", msg=msg)
 
 
 #function to verify client number in booking form
@@ -236,11 +248,14 @@ def verifyClient():
 #connect to database
     conn = sqlite3.connect('queen-bitch-db.db')
     cursor = conn.cursor()
+#fetch client name from html page
     firstName = request.args.get('f', '')
     surname = request.args.get('s', '')
-    sqlClientNo = "SELECT clientNumber FROM tblClients WHERE firstName =" + "'" + firstName + "'" + "AND surname =" + "'" + surname + "'"
+#fetch client number from database
+    sqlClientNo = "SELECT clientNumber FROM tblClients WHERE firstName LIKE" + "'%" + firstName + "%'" + "AND surname LIKE" + "'%" + surname + "%'"
     cursor.execute(sqlClientNo)
     clientNo = cursor.fetchone()
+#output verification
     if clientNo == None:
         return "Client not found in database. Please check you entered your name correctly or register as a new client."
     else:
@@ -258,6 +273,7 @@ def employeeLogin():
     if request.method == "GET":
         return render_template("employeeLogin.html")
     if request.method == "POST":
+#fetch username and password from html page
         aUsername = request.form['username']
         aPassword = request.form['password']
 #fetch correct password from database
@@ -282,9 +298,6 @@ def employeeLogin():
                 msg = 'Unable to login: username and password do not match'
                 return render_template("/result.html", msg=msg)
 
-
-
-
 #add new employee login
 @app.route('/new-employee', methods=["GET", "POST"])
 def addEmployee():
@@ -294,6 +307,7 @@ def addEmployee():
     if request.method == "GET":
         return render_template("addEmployee.html")
     if request.method == "POST":
+#fetch username and password from html page
         aUsername = request.form["username"]
         aPassword1 = request.form["password1"]
         aPassword2 = request.form["password2"]
@@ -411,8 +425,6 @@ def addBooking():
         msg = "Booking confirmed"
         return render_template("/result.html", msg=msg)
 
-
-
 #edit booking details
 @app.route('/edit-booking', methods = ["GET", "POST"])
 def editBooking():
@@ -461,7 +473,7 @@ def findClient():
     firstName = request.args.get('f', '')
     surname = request.args.get('s', '')
 #find client number
-    sqlClientNo = "SELECT clientNumber FROM tblClients WHERE firstName =" + "'" + firstName + "'" + "AND surname =" + "'" + surname + "'"
+    sqlClientNo = "SELECT clientNumber FROM tblClients WHERE firstName LIKE" + "'%" + firstName + "%'" + "AND surname LIKE" + "'%" + surname + "%'"
     cursor.execute(sqlClientNo)
     clientNo = cursor.fetchone()
 #if client is not in database
@@ -471,10 +483,10 @@ def findClient():
     sqlFindBooking = "SELECT bookingID, artistNumber FROM tblBookings WHERE clientNumber = " + str(clientNo[0])
     cursor.execute(sqlFindBooking)
     bookings = cursor.fetchall()
+#output check
     for row in bookings:
         bookingInfo = bookingInfo + "Client name: "+firstName+" "+surname+" Booking ID: "+row[0]+" Artist: "+artists[row[1]-1] + "<br>"
     return bookingInfo
-
 
 
 #delete existing booking
@@ -577,7 +589,7 @@ def findEstimateInfo():
     clientNo = cursor.fetchone()
     clientNo = str(clientNo[0])
 #get booking details from database
-    sqlBookingDetails = """SELECT artistNumber, estimate, deposit, sessionLength, desiredMonth FROM tblBookings
+    sqlBookingDetails = """SELECT artistNumber, estimate, deposit, sessionLength, desiredMonth, desiredYear FROM tblBookings
     WHERE bookingID = """ + "'" + bookingID + "'"
     cursor.execute(sqlBookingDetails)
     bookingDetails = cursor.fetchall()
@@ -586,13 +598,14 @@ def findEstimateInfo():
     deposit = str(bookingDetails[0][2])
     sessionLen = bookingDetails[0][3]
     month = bookingDetails[0][4]
+    year = str(bookingDetails[0][5])
 #find days in month artist has booking
 #if desired month is january
     if month == "january":
         for idx in range (1, 32):
 #select times with a booking already
             sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + """
-            AND bookedMonth = """ + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            AND bookedMonth = """ + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -614,7 +627,8 @@ def findEstimateInfo():
     elif month == "february":
         for idx in range (1, 29):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + """
+            AND bookedYear = """ + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -636,7 +650,7 @@ def findEstimateInfo():
     elif month == "march":
         for idx in range (1, 32):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -658,7 +672,7 @@ def findEstimateInfo():
     elif month == "april":
         for idx in range (1, 31):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -680,7 +694,7 @@ def findEstimateInfo():
     elif month == "may":
         for idx in range (1, 29):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -702,7 +716,7 @@ def findEstimateInfo():
     elif month == "june":
         for idx in range (1, 31):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -724,7 +738,7 @@ def findEstimateInfo():
     elif month == "july":
         for idx in range (1, 32):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -746,7 +760,7 @@ def findEstimateInfo():
     elif month == "august":
         for idx in range (1, 32):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -768,7 +782,7 @@ def findEstimateInfo():
     elif month == "september":
         for idx in range (1, 31):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -790,7 +804,7 @@ def findEstimateInfo():
     elif month == "october":
         for idx in range (1, 32):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -812,7 +826,7 @@ def findEstimateInfo():
     elif month == "november":
         for idx in range (1, 31):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -834,7 +848,7 @@ def findEstimateInfo():
     elif month == "december":
         for idx in range (1, 32):
 #select times with a booking already
-            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
+            sqlTakenTimes = "SELECT bookedTime FROM tblBookings WHERE artistNumber = " + "'" + artistNo + "'" + "AND bookedMonth = " + "'" + month + "'" + "AND bookedYear = " + "'" + year + "'" + "AND bookedDay =" + "'" + str(idx) + "'"
             cursor.execute(sqlTakenTimes)
             takenTimes = cursor.fetchall()
 #ignore days it is not possible to book
@@ -860,9 +874,10 @@ def findEstimateInfo():
     surname = clientDetails[0][1]
     email = clientDetails[0][2]
 #create string of estimate details to be sent back to html page
-    output = "<b>Name:</b> " + firstName + " " + surname + "<br><b> Email: </b>" + email + "<br><b> Estimate:</b> £" + estimate + """
+    output = "<b>Name:</b> " + firstName + " " + surname + "<br><b>Client Number:</b> "+ str(clientNo) + """
+    <br><b> Email: </b>""" + email + "<br><b> Estimate:</b> £""" + estimate + """
     <br><b> Deposit:</b> £""" + deposit + "<br><b> Session length:</b> " + sessionLen + "<br><b> Month:</b> " + month + """
-    <br><b> Optional days and times:</b> <br>""" + '<br>'.join(map(str, optionalTimes))
+    <br><b>Year:</b> """ + year + " <br><b> Optional days and times:</b> <br>""" + '<br>'.join(map(str, optionalTimes))
 #return output to html page
     return output
 
@@ -992,4 +1007,95 @@ def findBookings():
             <b> Booking ID:</b> """ + str(bookings[0][0])
 #return day's calendar
     return calendar
+
+@app.route('/client-directory')
+def clientDirectory():
+    return render_template("/clientDirectory.html")
+
+#AJAX FOR CLIENT DETAILS CLIENT DIRECTORY
+@app.route('/clientDetails')
+def clientDetails():
+#connect to database
+    conn = sqlite3.connect('queen-bitch-db.db')
+    cursor = conn.cursor()
+#get variables from html page
+    firstName = request.args.get('f', '')
+    surname = request.args.get('s', '')
+#fetch client data from database
+    sqlClientDeets = "SELECT clientNumber, email, phone FROM tblClients WHERE firstName LIKE '%" + firstName + """%'
+    AND surname LIKE '%""" + surname + "%'"
+    cursor.execute(sqlClientDeets)
+    clientDeets = cursor.fetchall()
+#if client is not in system
+    if len(clientDeets) == 0:
+        return("Client not found in system")
+    clientNo = str(clientDeets[0][0])
+#find client bookings
+    sqlClientBookings = "SELECT bookingID FROM tblBookings WHERE clientNumber ='" + clientNo + "'"
+    cursor.execute(sqlClientBookings)
+    clientBookings = cursor.fetchall()
+#concatonate bookings into one string
+    bookings = ''
+    for i in range (len(clientBookings)):
+        bookings = bookings + str(clientBookings[0][i])
+#only add comma if it will be followed by another booking
+        if i != (len(clientBookings)-1):
+            bookings = bookings + ", "
+#concatonate output into one string and return
+    clientDetails = "<b>Name:</b> " + firstName + " " + surname + "<br><b>Client Number:</b> "+ str(clientNo) + """
+    <br><b> Email: </b>""" + clientDeets[0][1] + "<br><b>Phone:</b> " + clientDeets[0][2] + "<br><b>Bookings: </b>" + bookings
+    return clientDetails
+
+#AJAX FOR BOOKING DETAILS CLIENT DIRECTORY
+@app.route('/bookingDetails')
+def bookingDetails():
+#connect to database
+    conn = sqlite3.connect('queen-bitch-db.db')
+    cursor = conn.cursor()
+
+#get variables from html page
+    bookingID = request.args.get('b', '')
+#fetch booking details from database
+    sqlBookingDeets = """SELECT clientNumber, artistNumber, description, placement, sizeWidth, sizeLength, estimate, deposit,
+    sessionLength, desiredMonth, desiredYear, receivedEstimate, confirmedBooking, bookedDay, bookedMonth, bookedYear, bookedTime
+    FROM tblBookings WHERE bookingID = '""" + bookingID + "'"
+    cursor.execute(sqlBookingDeets)
+    bookingDeets = cursor.fetchall()
+    if len(bookingDeets) == 0:
+        return ("Booking not found in system")
+    clientNo = str(bookingDeets[0][0])
+    artistNo = str(bookingDeets[0][1])
+#fetch client name from tblClients
+    sqlClientName = "SELECT firstName, surname FROM tblClients WHERE clientNumber = '" + clientNo + "'"
+    cursor.execute(sqlClientName)
+    name = cursor.fetchall()
+#fetch artist name from tblArtist
+    sqlArtistName = "SELECT artistName FROM tblArtists WHERE artistNumber = '" + artistNo + "'"
+    cursor.execute(sqlArtistName)
+    artist = cursor.fetchone()[0]
+#if booking date has been confirmed
+    if bookingDeets[0][12] == "Y":
+        bookingDetails = "<b>Booking ID:</b> " + bookingID + "<br><b>Client Name:</b> " + name[0][0] + " " + name[0][1] + """
+        <br><b>Artist:</b> """ + artist + "<br><b>Description:</b> " + bookingDeets[0][2] + "<br><b>Placement: </b> " + bookingDeets[0][3] + """
+        <br><b>Width:</b> """ + str(bookingDeets[0][4]) + "<br><b>Length:</b> " + str(bookingDeets[0][5]) + """
+        <br><b>Estimate:</b> """ + str(bookingDeets[0][6]) + "<br><b>Deposit:</b> " + str(bookingDeets[0][7]) + """
+        <br><b>Session Length:</b> """ + bookingDeets[0][8] + "<br><b>Desired Month:</b> " + bookingDeets[0][9] + """
+        <br><b>Desired Year:</b> """ +  str(bookingDeets[0][10]) + "<br><b>Received Estimate:</b> " + bookingDeets[0][11] + """
+        <br><b>Confirmed booking:</b> """ + bookingDeets[0][12] + "<br><b>Booked day:</b> " + str(bookingDeets[0][13]) + """
+        <br><b>Booked Month:</b> """ + bookingDeets[0][14] + "<br><b>Booked Year:</b> " + str(bookingDeets[0][15]) + """
+        <br><b>Booked Time:</b> """ + bookingDeets[0][16]
+#if no booking date has been confirmed
+    else:
+        bookingDetails = "<b>Booking ID:</b> " + bookingID + "<br><b>Client Name:</b> " + name[0][0] + " " + name[0][1] + """
+        <br><b>Artist:</b> """ + artist + "<br><b>Description:</b> " + bookingDeets[0][2] + "<br><b>Placement: </b> " + bookingDeets[0][3] + """
+        <br><b>Width:</b> """ + str(bookingDeets[0][4]) + "<br><b>Length:</b> " + str(bookingDeets[0][5]) + """
+        <br><b>Estimate:</b> """ + str(bookingDeets[0][6]) + "<br><b>Deposit:</b> " + str(bookingDeets[0][7]) + """
+        <br><b>Session Length:</b> """ + bookingDeets[0][8] + "<br><b>Desired Month:</b> " + bookingDeets[0][9] + """
+        <br><b>Desired Year:</b> """ +  str(bookingDeets[0][10]) + "<br><b>Received Estimate:</b> " + bookingDeets[0][11] + """
+        <br><b>Confirmed booking:</b> """ + bookingDeets[0][12]
+    return bookingDetails
+
+@app.route('/employee-home')
+def employeeHome():
+    return render_template("/employeeHome.html")
 
