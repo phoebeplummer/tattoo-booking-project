@@ -249,8 +249,6 @@ input[type=submit]:hover {
   background-color: #221A2A;
 }
 
-
-
 /* Create checkmark */
 .boxCheckmark:after {
   content: "";
@@ -263,8 +261,6 @@ input[type=submit]:hover {
   display: block;
 }
 
-
-
 /* Style the checkmark */
 .checkboxContainer .boxCheckmark:after {
   left: 5px;
@@ -275,8 +271,6 @@ input[type=submit]:hover {
   border-width: 0 3px 3px 0;
   transform: rotate(45deg);
 }
-
-
 
 * {
   box-sizing: border-box;
@@ -341,6 +335,7 @@ input:focus {
     }
 }
 
+/*change height of description entry field to allow for longer entries*/
 #description {
     height: 100px;
 }
@@ -365,13 +360,18 @@ input:focus {
     font-family: "bodoni", "georgia", serif
 }
 
-
 #requestButton {
     position: relative;
+    float: left;
+    margin-left: 25%;
+    margin-top: 200px;
 }
 
 #loginButton {
     position: relative;
+    float: right;
+    margin-right: 25%;
+    margin-top: 200px;
 }
 
 #requestButton:hover, #loginButton:hover {
@@ -445,11 +445,17 @@ input:focus {
         float: left;
         padding: 10px;
     }
+    #requestButton, #loginButton {
+        margin-top: 1000px;
+    }
 }
 
 @media screen and (max-width: 690px) {
     .container {
         width: 100%;
+    }
+    #requestButton, #loginButton {
+        margin-top: 2500px;
     }
 }
 
@@ -459,10 +465,10 @@ input:focus {
     border: 2px solid #221A2A;
     border-radius: 30%;
     color: #FFFFFF;
-    height: 60px;
-    width: 120px;
+    height: 80px;
+    width: 150px;
     text-align: center;
-    font-size: 12px;
+    font-size: 15px;
     text-decoration: none;
     font-family: "bodoni", "georgia", serif
 }
