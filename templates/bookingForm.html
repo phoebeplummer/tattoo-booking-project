@@ -181,7 +181,8 @@ input, select, textarea {
     Please reply to this email with the date you would like to book in.
     Please note that we cannot confirm your booking until we have received the deposit as our artists are busy women.
     If you have any queries or would like to change any details about your booking please email us.
-    It is always ok to make final changes on the day of your booking. It is of the utmost importance to us that you get your perfect tattoo! </p>
+    It is always ok to make final changes on the day of your booking. It is of the utmost importance to us that you get your perfect tattoo!
+    Please remember you must be over 18 to get a tattoo and you will be asked to provide proof of age when you come for your tattoo.</p>
 
 <!footer>
 <div class = "footer">
@@ -197,7 +198,7 @@ function bookedB4() {
 
 //validate first name and last name
 function allLetters(thisValue) {
-    var valid = /^[A-Za-z]+$/
+    var valid = /^[A-Za-z-]+$/
     if (thisValue.value.match(valid)) {
         var valid = "y";
     }
