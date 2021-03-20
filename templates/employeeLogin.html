@@ -1,6 +1,18 @@
 <html>
 <head>
 <link rel="stylesheet" href="static/tattoo.css">
+<style>
+/*style ID buttons*/
+input[type=submit]:not(#estimateButton) {
+    float: left;
+    width: 7%;
+    left: 0%;
+    margin-left: 10px;
+    position: absolute;
+    width: 150px;
+}
+
+</style>
 </head>
 <body>
 <div class = "header">
@@ -9,60 +21,87 @@
     </a>
     <h1>Queen Bitch Tattoo Studio</h1>
 </div>
-
 <div class = "content">
-    <h2> Employee login </h2>
-    <form action ="{{url_for('employeeLogin') }}" method = "POST">
-  <div class="row">
-        <div class = "col15">
-            <label for "username">Username: </label>
-        </div>
-        <div class='col85'>
-            <input type="text" name="username" id="username"
-            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter username before you can proceed' : '');" required>
-        </div>
-    </div>
-    <div class="row">
-        <div class = "col15">
-            <label for "password">Password: </label>
-        </div>
-        <div class='col85'>
-            <input type="password" name="password" id="password"
-            onchange="this.setCustomValidity(validity.valueMissing ? 'Please enter password before you can proceed' : '');" required>
-        </div>
-    </div>
 
-<!checkbox to show password>
-    <label class="checkboxContainer">Show Password
-        <input type="checkbox" id="showPsw" name="showPsw" onclick="showPassword()">
-        <span class="boxCheckmark"></span>
-    </label>
-    <br>
-    <br>
-    <input type = "submit" value="Login">
+<input id="printButton" type="button" value="Print page" onClick="window.print()">
+
+<h2>Employee site</h2>
+<h3>Outstanding Estimates</h3>
+
+
+<div id = "outstandingIDs">
+<!print booking IDs from flask app as buttons>
+    {% for row in rows %}
+    <input type="submit" onclick="findEstimateInfo(this); saveVar(this); displayEstimate()" value="{{row[0]}}">
+    <br><br><br>
+    {% endfor %}
 </div>
 
-<script>
-function showPassword() {
-  var x = document.getElementById("password");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
-  }
-}
+<!estimate info and confirm sent button>
+<div id ="estimate">
 
-//set custom validities
-document.getElementById("username").setCustomValidity('Please enter username before you can proceed');
-document.getElementById("password").setCustomValidity('Please enter password before you can proceed');
-</script>
+    <p id="estimateInfo"></p>
 
-</form>
+    <input type ="submit" value="Confirm estimate has been sent" onclick="estimateSent()" id="estimateButton">
+
+    <p id = "confirmSent"></p>
+
+</div>
+
+
+</div>
+<!home button>
+<a href = "/employee-home"><button id="employeeHomeButton">Back to<br>employee home</button> </a>
+
 <!footer>
 <div class = "footer">
   <div id ="footLeft"><p>Tel: 07525761214</p></div>
   <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
   <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
 </div>
+
+<script>
+//save booking ID as a variable so it can be passed to flask app
+var bookingID = ""
+
+function saveVar(b) {
+    bookingID = b.value
+}
+
+//AJAX function to find estimate info
+function findEstimateInfo(thisValue) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("estimateInfo").innerHTML = this.responseText;
+        }
+    };
+    var bookingID = thisValue.value
+    xhttp.open("GET", "/findEstimateInfo?b="+bookingID, true);
+    xhttp.send();
+}
+
+//AJAX function to change confirmedEstimate to Y
+function estimateSent(bookID) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("confirmSent").innerHTML = this.responseText;
+        }
+    };
+    xhttp.open("GET", "/estimateSent?b="+bookingID, true);
+    xhttp.send();
+}
+
+//display estimate info when booking ID is clicked
+function displayEstimate() {
+  var x = document.getElementById("estimate");
+  if (x.style.display === "none") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+</script>
 </body>
 </html>
