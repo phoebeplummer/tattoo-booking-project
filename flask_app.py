@@ -457,6 +457,53 @@ def editBooking():
             sqlUpdate = "UPDATE tblBookings SET " + aField + "=" + "'" + aNew + "'" + " WHERE bookingID =" + "'" + anID + "'"
             cursor.execute(sqlUpdate)
             conn.commit()
+
+
+#if field editted is length or width must calculate new estimate, deposit and session length
+            if aField == "sizeWidth" or aField == "sizeLength":
+#set values for length and width if new field is width
+                if aField == "sizeWidth":
+                    sqlGetLength = "SELECT sizeLength, artistNumber FROM tblBookings WHERE bookingID =" + "'" + anID + "'"
+                    cursor.execute(sqlGetLength)
+                    calcInfo = cursor.fetchall()
+                    length = calcInfo[0][0]
+                    width = aNew
+                    artistNo = calcInfo[0][1]
+#set values for length and width if new field is length
+                elif aField == "sizeLength":
+                    sqlGetWidth = "SELECT sizeWidth, artistNumber FROM tblBookings WHERE bookingID =" + "'" + anID + "'"
+                    cursor.execute(sqlGetWidth)
+                    calcInfo = cursor.fetchall()
+                    width = calcInfo[0][0]
+                    length = aNew
+                    artistNo = calcInfo[0][1]
+#work out new estimate
+                sqlAvgPrice = "SELECT avgPrice FROM tblArtists WHERE artistNumber =" + "'" + str(artistNo) + "'"
+                cursor.execute(sqlAvgPrice)
+                avgPrice = (cursor.fetchone()[0])
+                estimate = float(width) * float(length) * avgPrice
+                estimate = round(estimate)
+#work out new deposit
+                if estimate <20:
+                    deposit = 0
+                elif estimate<100:
+                    deposit = 20
+                elif estimate>=100 and estimate<200:
+                    deposit = 50
+                elif estimate>=200 and estimate<400:
+                    deposit = 100
+                else:
+                    deposit = 150
+#work out new sessionLength
+                if (float(width)*float(length))<300:
+                    sessionLength = "half day"
+                else:
+                    sessionLength = "full day"
+#add new calculated values to tblBookings
+                sqlUpdateCalc = "UPDATE tblBookings SET estimate = " + "'" + str(estimate) + "', deposit = " + "'" + str(deposit) + """'
+                , sessionLength = """ + "'" + sessionLength + "' WHERE bookingID =" + "'" + anID + "'"
+                cursor.execute(sqlUpdateCalc)
+                conn.commit()
             msg = "Booking details updated"
         return render_template("/result.html", msg=msg)
 
@@ -483,6 +530,9 @@ def findClient():
     sqlFindBooking = "SELECT bookingID, artistNumber FROM tblBookings WHERE clientNumber = " + str(clientNo[0])
     cursor.execute(sqlFindBooking)
     bookings = cursor.fetchall()
+#if client has no bookings
+    if len(bookings) == 0:
+        return "No bookings found for client in system"
 #output check
     for row in bookings:
         bookingInfo = bookingInfo + "Client name: "+firstName+" "+surname+" Booking ID: "+row[0]+" Artist: "+artists[row[1]-1] + "<br>"
