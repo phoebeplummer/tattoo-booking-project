@@ -1,0 +1,126 @@
+<html>
+<head>
+<link rel="stylesheet" href="static/tattoo.css">
+</head>
+<body>
+<!header>
+<div class = "header">
+    <a href = "/">
+        <img src="https://i.ibb.co/FwGkTmY/queen-bitch-logo.png" alt="logo" />
+    </a>
+    <h1>Queen Bitch Tattoo Studio</h1>
+</div>
+<div class="content">
+<h2>Employee site</h2>
+<h3>Client directory</h3>
+<form>
+<h4>Find client details</h4>
+<!field: client first name>
+    <div class="row">
+        <div class = "col15">
+            <label for "firstName">Client first name: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id="firstName" name="firstName" placeholder="Client first name...">
+        </div>
+    </div>
+<!field: client last name>
+    <div class="row">
+        <div class = "col15">
+            <label for "surname">Client surname: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id= "surname" name="surname" placeholder="Client surname here...">
+        </div>
+    </div>
+    <br>
+
+<!call AJAX function to find client details>
+    <button type="button" id="findButton" onclick="clientDetails(); displayClient();">Find client</button>
+
+<p id="clientInfo"></p>
+
+<h4>Find booking details</h4>
+
+<!field: client last name>
+    <div class="row">
+        <div class = "col15">
+            <label for "bookingID">Booking ID: </label>
+        </div>
+        <div class='col85'>
+            <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here...">
+        </div>
+    </div>
+    <br>
+
+
+
+<!call AJAX function to find booking details>
+    <button type="button" id="findButton" onclick="bookingDetails(); displayBooking();">Find booking</button>
+
+<p id="bookingInfo"></p>
+
+</form>
+
+</div>
+<!home button>
+<a href = "/employee-home"><button id="employeeHomeButton">Back to<br>employee home</button> </a>
+
+<!footer>
+<div class = "footer">
+  <div id ="footLeft"><p>Tel: 07525761214</p></div>
+  <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
+  <div id ="footRight"><p>Address: 15 Elms Road, London, SW49ER</p></div>
+</div>
+
+<script>
+
+//AJAX to find client
+function clientDetails() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("clientInfo").innerHTML = this.responseText;
+        }
+    };
+    var firstName = document.getElementById("firstName").value
+    var surname = document.getElementById("surname").value
+    xhttp.open("GET", "/clientDetails?f="+firstName+"&s="+surname, true);
+    xhttp.send();
+}
+
+//AJAX to find booking
+function bookingDetails() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("bookingInfo").innerHTML = this.responseText;
+        }
+    };
+    var bookingID = document.getElementById("bookingID").value
+    xhttp.open("GET", "/bookingDetails?b="+bookingID, true);
+    xhttp.send();
+}
+
+//show client info
+function displayClient() {
+  var x = document.getElementById("clientInfo");
+  if (x.style.display === "none") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+//show booking info
+function displayBooking() {
+  var x = document.getElementById("bookingInfo");
+  if (x.style.display === "none") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+</script>
+</body>
+</html>
