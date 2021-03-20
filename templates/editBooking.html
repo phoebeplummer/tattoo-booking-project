@@ -51,7 +51,7 @@
             </div>
             <div class='col85'>
                 <input type="text" id= "bookingID" name="bookingID" placeholder="Booking ID here..."
-                onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm booking ID before you can proceed' : '');" required>
+                onchange="this.setCustomValidity(validity.valueMissing ? 'Must confirm bookig ID before you can proceed' : '');">
             </div>
         </div>
     </div>
@@ -63,13 +63,14 @@
             <label for "field">Field to be edited:</label>
         </div>
         <div class = "col85">
-            <select name="field" id="field" required>
+            <select name="field" id="field" onblur="idRequired()" required>
                 <option value=email>Email</option>
                 <option value=phone>Phone</option>
                 <option value=description>Description</option>
                 <option value=placement>Placement</option>
                 <option value=sizeWidth>Approximate width</option>
                 <option value=sizeLength>Approximate length</option>
+                <option value=month>Desired month to book</option>
             </select>
         </div>
     </div>
@@ -91,6 +92,9 @@
 </form>
 </div>
 <!footer>
+<!home button>
+<a href = "/employee-home"><button id="employeeHomeButton">Back to<br>employee home</button> </a>
+
 <div class = "footer">
   <div id ="footLeft"><p>Tel: 07525761214</p></div>
   <div id ="footCentre"><p>Email: info@queenbitchtattoo.com</p></div>
@@ -170,12 +174,31 @@ function validateEntry() {
             alert("Please enter placement in valid format. Placement may contain letters only.");
         }
     }
+
+    else if (field.value = "month") {
+        var monthsArray = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december",
+        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        if (monthsArray.includes(entry.value) == true) {
+            var valid = "y";
+        }
+        else {
+            alert("Please enter valid month");
+        }
+    }
+
 }
+
+//only make booking ID required if details being editted are specific to a booking
+function idRequired() {
+    var field = document.getElementById("field").value;
+    if (field == "month" || field == "placement" || field == "sizeWidth" || field == "sizeLength" || field == "description" ) {
+        document.getElementById("bookingID").required = true;
+    }
+}
+
 //set custom validity messages
 document.getElementById("new").setCustomValidity('Please enter new entry before you can proceed');
-
-document.getElementById("bookingID").setCustomValidity('Must confirm booking ID before you can proceed');
-
 </script>
+
 </body>
 </html>
