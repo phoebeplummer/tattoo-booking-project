@@ -8,55 +8,6 @@ img {
   height: auto;
   width: 100%;
 }
-
-.overlay {
-  position: absolute;
-  left: 0px;
-  bottom: 0px;
-  right: 0px;
-  top: 0px;
-  background: rgba(101, 84, 115, 0.5);
-  color: #FFFFFF;
-  width: 100%;
-  transition: .5s ease;
-  opacity:0;
-}
-
-.overlay h3 {
-  color: #FFFFFF;
-  font-size: 40px;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-.container:hover .overlay {
-  opacity: 1;
-}
-
-/*change number of photos in row depending on width of screen*/
-.container {
-  position: relative;
-  width: 25%;
-  float: left;
-  padding: 10px;
-}
-
-@media screen and (max-width: 1200px) {
-    .container {
-        width: 50%;
-        float: left;
-        padding: 10px;
-    }
-}
-
-@media screen and (max-width: 690px) {
-    .container {
-        width: 100%;
-    }
-}
 </style>
 </head>
 
@@ -70,40 +21,44 @@ img {
 </div>
 <!photos of artist's work>
 <div class="content">
+<!photo: lana fern>
     <div class="container">
         <a href="https://www.instagram.com/lanaferntattoo/?hl=en">
             <img src="https://i.ibb.co/rk44TvL/lana-fern.jpg" alt="Lana Fern">
-        </a>
         <div class="overlay"><h3>Lana Fern</h3></div>
+        </a>
     </div>
 
+<!photo: peggy brown>
     <div class="container">
         <a href="https://www.instagram.com/misspeggybrown/?hl=en">
             <img src="https://i.ibb.co/Phy7ZpK/peggy-brown.jpg" alt="Peggy Brown">
-        </a>
         <div class="overlay"><h3>Peggy Brown</h3></div>
+        </a>
     </div>
 
+<!photo: jodie ahnien>
     <div class="container">
         <a href="https://www.instagram.com/JodieAhnienTattoo/">
             <img src="https://i.ibb.co/rZpZrky/jodie-ahnien.jpg"  alt="Jodie Ahnien">
-        </a>
         <div class="overlay"><h3>Jodie Ahnien</h3></div>
+        </a>
     </div>
 
+<!photo: el rose>
     <div class="container">
         <a href="https://www.instagram.com/elrosetattoo/?hl=en">
             <img src="https://i.ibb.co/TTzfxCC/el-rose.jpg" alt="El Rose">
-        </a>
         <div class="overlay"><h3>El Rose</h3></div>
+        </a>
     </div>
 
-    <br> <br> <br> <br> <br> <br> <br> <br>
+    <br> <br> <br> <br> <br> <br> <br> <br><br><br>
 
 <!link to request booking>
-    <button id="requestButton"><a href = "/booking-request" id="requestA">Request a booking</a></button>
+    <a href = "/booking-request" id="requestA"><button id="requestButton">Request a booking</button></a>
 <!link to employee login>
-    <button id="loginButton"><a href = "/employee-login" id="loginA">Employee Login</a></button>
+    <a href = "/employee-login" id="loginA"><button id="loginButton">Employee Login</button></a>
 </div>
 <!footer>
 <div class = "footer">
@@ -114,4 +69,5 @@ img {
 </div>
 </div>
 </body>
+
 </html>
